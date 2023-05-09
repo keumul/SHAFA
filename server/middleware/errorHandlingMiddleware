@@ -1,0 +1,8 @@
+const error = require('../errors/error');
+
+module.exports = function (err, req, res, next) {
+    if (err instanceof error) {
+        return res.status(err.status).json({message: err.message})
+    }
+    return res.status(500).json({message: "ERROR: We dont't know what makes with this error..."})
+}
