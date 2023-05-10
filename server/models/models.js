@@ -66,7 +66,26 @@ const UsersOutfits = sequelize.define('usersOutfits', {
   description: { type: DataTypes.STRING, allowNull: false }
 });
 
-// ReservedStuffs and Stuffs
+const StuffsInOutfits = sequelize.define('stuffsInOutfits', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+});
+
+const UsersInShelves = sequelize.define('usersInShelves', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+});
+
+StuffsInOutfits.belongsTo(Outfits);
+Outfits.hasOne(StuffsInOutfits);
+
+StuffsInOutfits.belongsTo(Stuffs);
+Stuffs.hasMany(StuffsInOutfits);
+
+UsersInShelves.belongsTo(Users);
+Users.hasMany(UsersInShelves);
+
+UsersInShelves.belongsTo(Shelves);
+Shelves.hasOne(UsersInShelves);
+
 ReservedStuffs.hasMany(Stuffs);
 Stuffs.belongsTo(ReservedStuffs);
 
@@ -95,8 +114,8 @@ Shelves.belongsTo(Categories);
 Categories.hasMany(Shelves);
 
 // Outfits and Stuffs
-Outfits.belongsTo(Stuffs);
-Stuffs.hasOne(Outfits);
+Stuffs.belongsTo(Outfits);
+Outfits.hasOne(Stuffs);
 
 // ReservedOutfits and Outfits
 ReservedOutfits.belongsTo(Outfits);
@@ -121,4 +140,7 @@ module.exports = {
             UsersStuffs, 
             UsersOutfits, 
             ReservedOutfits, 
-            ReservedStuffs};
+            ReservedStuffs, 
+            StuffsInOutfits,
+            UsersInShelves
+          };

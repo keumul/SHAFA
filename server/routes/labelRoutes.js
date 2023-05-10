@@ -1,12 +1,12 @@
 const Router = require('express')
 const router = new Router()
 const labelController = require('../controllers/labelController')
-const authMiddleware = require('../middleware/authMiddleware')
+const checkRole = require('../middleware/checkRoleMiddleware')
 
-router.get('/labels', labelController.getAllLabels);
-router.post('/labels', labelController.createLabel);
-router.put('/labels/:id', labelController.updateLabel);
-router.delete('/labels/:id', labelController.deleteLabel);
+router.get('/', checkRole(4), labelController.getAllLabels);
+router.post('/', checkRole(4), labelController.createLabel);
+router.put('/:id', checkRole(4), labelController.updateLabel);
+router.delete('/:id', checkRole(4), labelController.deleteLabel);
 
 module.exports = router;
 

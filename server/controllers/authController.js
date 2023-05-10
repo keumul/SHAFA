@@ -2,20 +2,18 @@ const Error = require('../errors/error');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { Users } = require('../models/models')
-const { UserDTO } = require('../models/dto/auth.dto')
 
-const generateJwt = (id, email, role) => {
+const generateJwt = (id, email, roleId) => {
     return jwt.sign(
-        {id, email, role},
+        {id, email, roleId},
         process.env.SECRET_KEY,
         {expiresIn: '24h'}
     )
 }
 
-
 class UserController {
     async registration(req, res, next) {
-          const { userName, email, password, pronounces } = req.body;
+          const { userName, email, password, pronounces, roleId } = req.body;
       
           // Проверка наличия пользователя с тем же email
           const existingUser = await Users.findOne({ where: { email } });
@@ -33,8 +31,9 @@ class UserController {
             passwordHash: hashedPassword,
             isEmailConfirmed: false,
             pronounces,
+            roleId
           });
-          const token = generateJwt(newUser.id, newUser.email, newUser.role)
+          const token = generateJwt(newUser.id, newUser.email, newUser.roleId)
           res.status(201).json({ token: `${token}` });
       }
       
@@ -49,7 +48,7 @@ class UserController {
         if (!comparePassword) {
             return next(Error.internal('INFO: Wrong password!'))
         }
-        const token = generateJwt(user.id, user.email, user.role)
+        const token = generateJwt(user.id, user.email, user.roleId)
         return res.json({token})
     }
     

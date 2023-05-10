@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { Users } = require('../models/models')
 const { Shelves } = require('../models/models')
+const {UsersInShelves} = require('../models/models')
 
 class ShelfController {
   async getAllShelves(req, res) {
@@ -12,7 +13,7 @@ class ShelfController {
       res.json(shelves);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'ERROR: Something wrong until search all shelves!' });
+      res.status(500).json({ error: 'ERROR: Something wrong while search all shelves!' });
     }
   };
   
@@ -23,10 +24,36 @@ class ShelfController {
       res.status(201).json(newShelf);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'ERROR: Something wrong until creating shelf!' });
+      res.status(500).json({ error: 'ERROR: Something wrong while creating shelf!' });
     }
   };
   
+  async sharedAccess(req, res) {
+    try {
+        const { shelfId } = req.params;
+        const { userId } = req.body;
+        const sharedAccess = await UsersInShelves.create({shelfId, userId});
+        res.status(201).json({ sharedAccess: sharedAccess });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'ERROR: Something went wrong with shared access!' });
+      }
+}
+
+async getShelfById(req, res) {
+  try {
+    const { id } = req.params;
+    const shelf = await Shelves.findByPk(id);
+    if (!shelf) {
+      return res.status(404).json({ error: 'ERROR: Shelf not found!' });
+    }
+    res.json({ shelf: shelf });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'ERROR: Something went wrong while retrieving the shelf!' });
+  }
+};
+
   async updateShelf(req, res) {
     try {
       const { id } = req.params;
