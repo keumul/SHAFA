@@ -1,0 +1,8 @@
+<h2>Shelf List</h2>
+<ul>
+  <li *ngFor="let shelf of shelves">{{ shelf.name }}</li>
+</ul>
+<form (ngSubmit)="addShelf()">
+  <!-- <input type="text" [(ngModel)]="newShelfName" placeholder="Enter shelf name, please!" required>
+  <button type="submit">Add</button> -->
+</form>

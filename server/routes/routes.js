@@ -8,7 +8,7 @@ const shelfRoutes = require('./shelfRoutes');
 const stuffRoutes = require('./stuffRoutes');
 const userRoutes = require('./userRoutes');
 
-router.use('/user', authRoutes);
+router.use('/auth', authRoutes);
 router.use('/label', labelRoutes);
 router.use('/outfit', outfitRoutes);
 router.use('/shelf', shelfRoutes);

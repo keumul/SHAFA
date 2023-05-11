@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+@font-face {
+    font-family: 'Sacramento';
+    src: url('./assets/Sacramento-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+body, html { 
+margin: 0; 
+font-family: 'Sacramento';
+        
+background-color: brown;
+}

@@ -1,6 +1,17 @@
 const { Users } = require('../models/models')
 
 class userController {
+  async getUserRole(req,res){
+    try {
+      const {id} = req.params; 
+      const user = await Users.findByPk(id); 
+      const role = user.roleId;
+      res.json({ role });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something went wrong while fetching user role!' });
+    }
+  }
     async getUsers(req, res) {
         try {
           const user = await Users.findAll();

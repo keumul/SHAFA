@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Node.js+MSSQL+Sequilize",
+  "description": "Node.js+MSSQL+Sequelize",
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js"
