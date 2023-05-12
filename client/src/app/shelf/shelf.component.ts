@@ -1,58 +1,88 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-interface Shelf {
-  id: number;
-  name: string;
-  userId: number;
-  categoryId: number;
-}
+import { Component } from '@angular/core';
+import { ShelfService } from '../services/shelf.service';
 
 @Component({
   selector: 'app-shelf',
   templateUrl: './shelf.component.html',
   styleUrls: ['./shelf.component.css']
 })
+export class ShelfComponent {
+  shelves: any[] = [];
 
-export class ShelfComponent implements OnInit {
-  shelves: Shelf[] = [];
+  newId: string = '';
   newShelfName: string = '';
+  newShelfUserId: string = '';
+  newShelfCategoryId: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private shelfService: ShelfService) {}
 
   ngOnInit() {
     this.getAllShelves();
   }
 
   getAllShelves() {
-    this.http.get<Shelf[]>('http://localhost:3000/api/shelf/').subscribe(
-      (shelves) => {
-        this.shelves = shelves;
+    this.shelfService.getAllShelves().subscribe(
+      (response: any) => {
+        this.shelves = response;
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );    
+  }
+
+  createShelf() {
+    this.shelfService.createShelf(this.newShelfName, this.newShelfUserId, this.newShelfCategoryId).subscribe(
+      (response: any) => {
+        console.log('Shelf created successfully!', response);
+        this.getAllShelves();
+        this.resetInputFields();
       },
       (error) => {
         console.error(error);
-        // Handle error
       }
     );
   }
 
-  addShelf() {
-    const newShelf: Shelf = {
-      id: 0,
-      name: this.newShelfName,
-      userId: 0, 
-      categoryId: 0,
-    };
-
-    this.http.post<Shelf>('/api/shelves', newShelf).subscribe(
-      (shelf) => {
-        this.shelves.push(shelf);
-        this.newShelfName = '';
+  updateShelf() {
+    this.shelfService.updateShelf(this.newId, this.newShelfName, this.newShelfUserId, this.newShelfCategoryId).subscribe(
+      (response: any) => {
+        console.log('Shelf updated successfully!', response);
+        this.getAllShelves();
       },
       (error) => {
         console.error(error);
-        // Handle error
       }
     );
+  }
+
+  deleteShelf() {
+    this.shelfService.deleteShelf(this.newId).subscribe(
+      (response: any) => {
+        console.log('Shelf deleted successfully!', response);
+        this.getAllShelves();
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  sharedAccess() {
+    this.shelfService.sharedAccess(this.newId, this.newShelfUserId).subscribe(
+      (response: any) => {
+        console.log('Shared access created successfully!', response);
+        this.getAllShelves();
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  private resetInputFields() {
+    this.newShelfName = '';
+    this.newShelfUserId = '';
+    this.newShelfCategoryId = '';
   }
 }

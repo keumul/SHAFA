@@ -1,19 +1,27 @@
 <mat-toolbar>
-    <span class="text-logo">SHAFA</span>
+    <span class="text-logo">Your personal Shafa ☆</span>
     <span class="example-spacer"></span>
       <mat-icon class="icon-user">profile</mat-icon>
   </mat-toolbar>  
-<div>
-    <mat-tab-group>
-        <mat-tab label="Shelves">
-          <app-shelf></app-shelf> <!-- Здесь добавьте компонент для отображения полок -->
-        </mat-tab>
-        <mat-tab label="Stuffs">
-          <app-stuff></app-stuff> <!-- Здесь добавьте компонент для отображения вещей -->
-        </mat-tab>
-        <mat-tab label="Outfits">
-          <app-outfit-builder></app-outfit-builder> <!-- Здесь добавьте компонент для отображения образов -->
-        </mat-tab>
-      </mat-tab-group>
-      
-</div>
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="full-width-label">Shelves</span>
+      </ng-template>
+      <app-shelf></app-shelf>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="full-width-label">Stuffs</span>
+      </ng-template>
+      <app-stuff></app-stuff>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="full-width-label">Outfits</span>
+      </ng-template>
+      <app-outfit-builder></app-outfit-builder> 
+    </mat-tab>
+  </mat-tab-group>
+  

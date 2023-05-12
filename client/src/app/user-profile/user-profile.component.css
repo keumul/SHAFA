@@ -1,27 +1,39 @@
-div {
+mat-tab-group {
     background: linear-gradient(90deg, #acabdc, #7d89c3, #6fb4cf, #e38eb5);
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
 	transform: translate3d(0, 0, 0);
-    color: rgb(56, 16, 16);
-    height: 89%;
+    color: rgb(0, 0, 0);
+    height: 100%;
+    font-family: 'Bad Script';
 }
-.example-spacer {
-    flex: 100 1 auto;
-}
+.full-width-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    height: 100%;
+    font-family: 'Sacramento';
+    font-size: 30px;
+  }
+  
 text-logo{
     font-family: 'Sacramento';
     text-align: center;
+}
+mat-toolbar{
+    color: #7D89C3;
+    background: linear-gradient(#ffffff, #e2e0fa);
+    font-family: 'Sacramento';
+    font-size: 30px;
+}
+.example-spacer {
+    flex: 100 1 auto;
 }
 .icon-user{
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%237D89C3'%3E%3Cpath d='M16.14 12.33C17.28 11.24 18 9.71 18 8c0-3.31-2.69-6-6-6S6 4.69 6 8c0 1.71.72 3.24 1.86 4.33C3.52 13.05 0 14.94 0 18c0 4 1 4 12 4s12 0 12-4c0-3.06-3.52-4.95-7.86-5.67z'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
     background-size: 24px 24px;
     background-position: center center;
     background-repeat: no-repeat;
-}
-mat-toolbar{
-    color: #7D89C3;
-    background: linear-gradient(#ffffff, #e2e0fa);
 }
 @font-face {
     font-family: 'Sacramento';
