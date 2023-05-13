@@ -48,6 +48,12 @@ export class ShelfComponent implements OnInit{
   shelvesForm = new FormControl();
   selectedCategoryId: number = 0;
 
+  shelfId: number = this.selectedShelfId?.id ?? 0;
+  shelfName: string = this.selectedShelfId?.name ?? '';
+  userId: number = this.selectedShelfId?.user?.id ?? 0;
+  catId: number = this.selectedShelfId?.category?.id ?? 0;
+  
+
   constructor(private shelfService: ShelfService, private authService: AuthService) {}
 
   ngOnInit() {
@@ -93,7 +99,8 @@ export class ShelfComponent implements OnInit{
   }
 
   updateShelf() {
-    this.shelfService.updateShelf(this.newId, this.newShelfName, this.currentUserId, this.selectedCategoryId).subscribe(
+
+    this.shelfService.updateShelf(this.shelfId, this.shelfName, this.userId, this.catId).subscribe(
       (response: any) => {
         console.log('Shelf updated successfully!', response);
         this.getAllShelves();
@@ -105,7 +112,7 @@ export class ShelfComponent implements OnInit{
   }
 
   deleteShelf() {
-    this.shelfService.deleteShelf(this.newId).subscribe(
+    this.shelfService.deleteShelf(this.shelfId).subscribe(
       (response: any) => {
         console.log('Shelf deleted successfully!', response);
         this.getAllShelves();
@@ -128,17 +135,15 @@ export class ShelfComponent implements OnInit{
     );
   }
 
-  private resetInputFields() {
-    this.newShelfName = '';
-    this.currentUserId = 0;
-    this.selectedCategoryId = 0;
-  }
-
   setShelveId(shelf: Shelf){
     this.selectedShelfId = shelf;
+    this.shelfId = this.selectedShelfId?.id ?? 0;
+    this.shelfName = this.selectedShelfId?.name ?? '';
+    this.userId = this.selectedShelfId?.user?.id ?? 0;
+    this.catId = this.selectedShelfId?.category?.id ?? 0;
     console.log(this.selectedShelfId);
-    
   }
+
   getCurrentUserId(){
     this.authService.getCurrentUserId().subscribe(
       (userId: number) => {

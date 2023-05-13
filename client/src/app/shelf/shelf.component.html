@@ -3,6 +3,8 @@
     <mat-card>
           <div class="form-row">
             <button (click)="getAllShelves()" class="custom-btn btn-11">View</button>
+            
+            
             <input matInput type="text" [(ngModel)]="newShelfName" placeholder="Name">
             <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
               <mat-select-trigger class="example-additional-selection">
@@ -15,14 +17,16 @@
             <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
 
 
-            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
-            <input matInput type="text" [(ngModel)]="newShelfName" placeholder="Shelf Name">
-            <input matInput type="text" [(ngModel)]="currentUserId" placeholder="User ID">
-            <!-- <input matInput type="text" [(ngModel)]="newShelfCategoryId" placeholder="Category ID"> -->
+            <input matInput type="text" [(ngModel)]="shelfName" placeholder="Shelf Name">
+            <input matInput type="text" [(ngModel)]="userId" placeholder="User ID">
+            <input matInput type="text" [(ngModel)]="catId" placeholder="Category ID">
             <button (click)="updateShelf()" class="custom-btn btn-11">Edit</button>
-            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
+            
+            
+            <input matInput type="text" [(ngModel)]="shelfId" placeholder="Shelf Id">
             <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
-            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
+
+            <input matInput type="text" [(ngModel)]="shelfId" placeholder="Shelf Id">
             <input matInput type="text" [(ngModel)]="currentUserId" [value]="selectedShelfId?.user" placeholder="User ID">
             <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
           </div>
