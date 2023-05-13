@@ -1,4 +1,6 @@
 const { Users } = require('../models/models')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 class userController {
   async getUserRole(req,res){

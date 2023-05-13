@@ -1,33 +1,45 @@
+<div class="container">
+  <div class="card-container">
+    <mat-card>
+          <div class="form-row">
+            <button (click)="getAllShelves()" class="custom-btn btn-11">View</button>
+            <input matInput type="text" [(ngModel)]="newShelfName" placeholder="Name">
+            <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
+              <mat-select-trigger class="example-additional-selection">
+                {{ shelvesForm.value?.[0]?.name || '' }}
+              </mat-select-trigger>
+              <mat-option *ngFor="let category of cat" [value]="category.id">
+                {{ category.id }} {{ category.name }}
+              </mat-option>
+            </mat-select>
+            <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
 
-<div class="card-container">
-<mat-card>
-<div class="shelf-container" *ngFor="let shelf of shelves">
-  
-  <h3>{{ shelf.id }}</h3>
-  <h3>{{ shelf.name }}</h3>
-  <p>Category: {{ shelf.categoryId }}</p>
-  <p>User: {{ shelf.userId }}</p>
-  
-</div>
 
-<div class="shelf-form">
-  <mat-form-field class="example-full-width">
-  <button (click)="getAllShelves()" class="custom-btn btn-11">View</button>
-  <input type="text" [(ngModel)]="newShelfName" placeholder="Shelf Name">
-  <input type="text" [(ngModel)]="newShelfUserId" placeholder="User ID">
-  <input type="text" [(ngModel)]="newShelfCategoryId" placeholder="Category ID">
-  <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
-  <input type="text" [(ngModel)]="newId" placeholder="Shelf Id">
-  <input type="text" [(ngModel)]="newShelfName" placeholder="Shelf Name">
-  <input type="text" [(ngModel)]="newShelfUserId" placeholder="User ID">
-  <input type="text" [(ngModel)]="newShelfCategoryId" placeholder="Category ID">
-  <button (click)="updateShelf()" class="custom-btn btn-11">Edit</button>
-  <input type="text" [(ngModel)]="newId" placeholder="Shelf Id">
-  <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
-  <input type="text" [(ngModel)]="newId" placeholder="Shelf Id">
-  <input type="text" [(ngModel)]="newShelfUserId" placeholder="User ID">
-  <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
-</mat-form-field>
-</div>
-</mat-card>
+            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
+            <input matInput type="text" [(ngModel)]="newShelfName" placeholder="Shelf Name">
+            <input matInput type="text" [(ngModel)]="currentUserId" placeholder="User ID">
+            <!-- <input matInput type="text" [(ngModel)]="newShelfCategoryId" placeholder="Category ID"> -->
+            <button (click)="updateShelf()" class="custom-btn btn-11">Edit</button>
+            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
+            <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
+            <input matInput type="text" [(ngModel)]="newId" placeholder="Shelf Id">
+            <input matInput type="text" [(ngModel)]="currentUserId" [value]="selectedShelfId?.user" placeholder="User ID">
+            <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
+          </div>
+    </mat-card>
+  </div>
+
+  <div class="json-view">
+    <mat-card class="scrollable-card">
+      <div *ngFor="let shelve of shelves">
+        <button matRipple class="btn-list" (click)="setShelveId(shelve)">
+          <div class="server-response">
+            <mat-card-title>{{ shelve.name }}</mat-card-title>
+            <mat-card-subtitle>Owner: {{ shelve.user.userName }}</mat-card-subtitle>
+            <mat-card-subtitle>Category: {{ shelve.category.name }}</mat-card-subtitle>
+          </div>
+        </button>
+      </div>
+    </mat-card>
+  </div>
 </div>

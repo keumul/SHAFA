@@ -1,14 +1,29 @@
 const Error = require('../errors/error');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { Users } = require('../models/models')
+const { Users, Categories } = require('../models/models')
 const { Shelves } = require('../models/models')
 const {UsersInShelves} = require('../models/models')
 
 class ShelfController {
+  async getAllCategories(req,res){
+    try {
+      const categories = await Categories.findAll();
+
+      res.json(categories);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something wrong while search all categories!' });
+    }
+  }
   async getAllShelves(req, res) {
     try {
-      const shelves = await Shelves.findAll();
+      const shelves = await Shelves.findAll({
+        include: [
+          { model: Users },
+          { model: Categories }
+        ],
+      });
 
       res.json(shelves);
     } catch (error) {
@@ -20,7 +35,12 @@ class ShelfController {
   async createShelf(req, res) {
     try {
       const { name, userId, categoryId } = req.body;
-      const newShelf = await Shelves.create({ name, userId, categoryId });
+      const newShelf = await Shelves.create({ name, userId, categoryId }, {
+        include: [
+          { model: Users },
+          { model: Categories }
+        ],
+      });
       res.status(201).json(newShelf);
     } catch (error) {
       console.error(error);
@@ -32,7 +52,12 @@ class ShelfController {
     try {
         const { shelfId } = req.params;
         const { userId } = req.body;
-        const sharedAccess = await UsersInShelves.create({shelfId, userId});
+        const sharedAccess = await UsersInShelves.create({shelfId, userId}, {
+          include: [
+            { model: Users },
+            { model: Categories }
+          ],
+        });
         res.status(201).json({ sharedAccess: sharedAccess });
       } catch (error) {
         console.error(error);
@@ -58,7 +83,14 @@ async getShelfById(req, res) {
     try {
       const { id } = req.params;
       const { name, userId, categoryId } = req.body;
-      const [numRowsAffected] = await Shelves.update({ name, userId, categoryId }, { where: { id } });
+      const [numRowsAffected] = await Shelves.update({ name, userId, categoryId }, 
+        { where: { id } }, 
+        {
+          include: [
+            { model: Users },
+            { model: Categories }
+          ],
+        });
     
       if (numRowsAffected === 0) {
         return res.status(404).json({ error: 'ERROR: Shelf not found!' });

@@ -14,7 +14,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { MatInputModule} from '@angular/material/input';
 import { MatRippleModule} from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthComponent } from './auth/auth.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ShelfComponent } from './shelf/shelf.component';
@@ -28,6 +28,9 @@ import { MatIconModule} from '@angular/material/icon';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatTabsModule} from '@angular/material/tabs';
+import { TokenInterceptor } from './token.interceptor';
+import { MatSelectModule } from '@angular/material/select';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,8 +62,15 @@ import { MatTabsModule} from '@angular/material/tabs';
     MatSidenavModule,
     MatExpansionModule,
     MatTabsModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [ [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

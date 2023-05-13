@@ -1,29 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ShelfService } from '../services/shelf.service';
+import { AuthService } from '../services/auth.service';
+import { FormControl } from '@angular/forms';
+
+interface Shelf {
+  id: number;
+  name: string;
+  user: User;
+  category: Category;
+}
+
+interface User {
+  id: number;
+  userName: string
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface SharedAccess {
+  sharedAccess: any;
+}
+
+interface ShelfResponse {
+  shelf: Shelf;
+}
+
+interface ErrorResponse {
+  error: string;
+}
+
+interface SuccessResponse {
+  message: string;
+}
 
 @Component({
   selector: 'app-shelf',
   templateUrl: './shelf.component.html',
   styleUrls: ['./shelf.component.css']
 })
-export class ShelfComponent {
-  shelves: any[] = [];
-
-  newId: string = '';
+export class ShelfComponent implements OnInit{
+  newId: number = 0;
   newShelfName: string = '';
-  newShelfUserId: string = '';
-  newShelfCategoryId: string = '';
+  currentUserId: number = 0;
+  shelvesForm = new FormControl();
+  selectedCategoryId: number = 0;
 
-  constructor(private shelfService: ShelfService) {}
+  constructor(private shelfService: ShelfService, private authService: AuthService) {}
 
   ngOnInit() {
+    this.getCurrentUserId();
+    console.log(this.currentUserId);
     this.getAllShelves();
+    this.loadCategories();
+  }
+  loadCategories() {
+    this.shelfService.getAllCategories().subscribe((data: Category[]) => {
+      this.cat = data.map((category: any) => ({
+        id: category.id,
+        name: category.name
+      }));
+      console.log(this.cat);
+    });
   }
 
   getAllShelves() {
     this.shelfService.getAllShelves().subscribe(
-      (response: any) => {
-        this.shelves = response;
+      (data: Shelf[]) =>{
+        this.shelves = data;
+        console.log(this.shelves);
+        
       },
       (error: any) => {
         console.error(error);
@@ -32,11 +80,11 @@ export class ShelfComponent {
   }
 
   createShelf() {
-    this.shelfService.createShelf(this.newShelfName, this.newShelfUserId, this.newShelfCategoryId).subscribe(
+    this.shelfService.createShelf(this.newShelfName, this.currentUserId, this.selectedCategoryId).subscribe(
       (response: any) => {
         console.log('Shelf created successfully!', response);
         this.getAllShelves();
-        this.resetInputFields();
+        // this.resetInputFields();
       },
       (error) => {
         console.error(error);
@@ -45,7 +93,7 @@ export class ShelfComponent {
   }
 
   updateShelf() {
-    this.shelfService.updateShelf(this.newId, this.newShelfName, this.newShelfUserId, this.newShelfCategoryId).subscribe(
+    this.shelfService.updateShelf(this.newId, this.newShelfName, this.currentUserId, this.selectedCategoryId).subscribe(
       (response: any) => {
         console.log('Shelf updated successfully!', response);
         this.getAllShelves();
@@ -69,7 +117,7 @@ export class ShelfComponent {
   }
 
   sharedAccess() {
-    this.shelfService.sharedAccess(this.newId, this.newShelfUserId).subscribe(
+    this.shelfService.sharedAccess(this.newId, this.currentUserId).subscribe(
       (response: any) => {
         console.log('Shared access created successfully!', response);
         this.getAllShelves();
@@ -82,7 +130,28 @@ export class ShelfComponent {
 
   private resetInputFields() {
     this.newShelfName = '';
-    this.newShelfUserId = '';
-    this.newShelfCategoryId = '';
+    this.currentUserId = 0;
+    this.selectedCategoryId = 0;
   }
+
+  setShelveId(shelf: Shelf){
+    this.selectedShelfId = shelf;
+    console.log(this.selectedShelfId);
+    
+  }
+  getCurrentUserId(){
+    this.authService.getCurrentUserId().subscribe(
+      (userId: number) => {
+        this.currentUserId = userId;
+        console.log(this.currentUserId)
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+  users?: User;
+  selectedShelfId?: Shelf;
+  shelves?: Shelf[]
+  cat?: Category[]
 }

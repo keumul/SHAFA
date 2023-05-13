@@ -53,8 +53,19 @@ class UserController {
     }
     
     async check(req, res, next) {
-        const token = generateJwt(req.user.id, req.user.userName, req.user.email)
-        return res.json({token})
+        try {
+            const userId = req.user.id;
+            const user = await Users.findOne({ where: { id: userId } });
+        
+            if (!user) {
+              return next(Error.internal('INFO: User not found!'));
+            }
+            const token = generateJwt(user.id, user.userName, user.email);
+            return res.json({id: userId });
+          } catch (error) {
+            // Handle any errors that occur during the process
+            return next(error);
+          }
     }
 }
 

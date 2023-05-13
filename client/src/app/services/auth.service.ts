@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -21,7 +21,7 @@ interface AuthResponse {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService{
   private apiUrl = 'http://localhost:3000/api/auth';
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -56,5 +56,10 @@ export class AuthService {
       this.router.navigateByUrl('/admin-profile');
     }
     // Add more conditions for other roles if needed
+  }
+
+  getCurrentUserId(): Observable<number> {
+    return this.http.get<{id:number}>(`http://localhost:3000/api/auth/auth`).pipe(
+      map(response => response.id));
   }
 }

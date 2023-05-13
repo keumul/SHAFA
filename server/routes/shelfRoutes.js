@@ -7,6 +7,7 @@ router.get('/admin', checkRole(1), shelfController.getAllShelves);
 router.get('/admin/:id', checkRole(1), shelfController.getShelfById);
 
 router.get('/', checkRole(4), shelfController.getAllShelves);
+router.get('/categ', checkRole(4), shelfController.getAllCategories);
 router.get('/:id', checkRole(4), shelfController.getShelfById);
 router.post('/', checkRole(4), shelfController.createShelf);
 router.put('/:id', checkRole(4), shelfController.updateShelf);
