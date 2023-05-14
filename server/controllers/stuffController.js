@@ -22,6 +22,28 @@ async getAllStuffs(req, res) {
     }
   };
   
+  async getStuffByUserId(req, res){
+    const { user_id } = req.params;
+    try {
+      const stuffs = await Stuffs.findAll(
+        {
+          include: [
+            { model: Users },
+            { model: Shelves },
+            { model: Labels }
+          ],
+          where : {
+            userId: user_id
+          }
+        }
+      );
+      res.json({ stuffs });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something went wrong while fetching stuffs!' });
+    }
+  }
+
   async createStuff(req, res) {
     try {
       const { name, labelId, userId, shelfId, isAvailable } = req.body;

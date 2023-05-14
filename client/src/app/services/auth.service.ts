@@ -52,8 +52,10 @@ export class AuthService{
   redirectToProfile(roleId: number): void {
     if (roleId === 4) {
       this.router.navigateByUrl('/user-profile');
+      location.reload();
     } else if (roleId === 1) {
       this.router.navigateByUrl('/admin-profile');
+      location.reload();
     }
     // Add more conditions for other roles if needed
   }

@@ -1,54 +1,52 @@
 <div class="container">
-    <!-- <div class="card-container">
-      <mat-card>
-        <div class="form-row">
-          <button (click)="getAllStuffs()" class="custom-btn btn-11">View</button>
-  
-          <input matInput type="text" [(ngModel)]="newStuffName" placeholder="Name">
-          <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
-            <mat-select-trigger class="example-additional-selection">
-              {{ shelvesForm.value?.[0]?.name || '' }}
-            </mat-select-trigger>
-            <mat-option *ngFor="let category of cat" [value]="category.id">
-              {{ category.name }}
-            </mat-option>
-          </mat-select>
-          <button (click)="createStuff()" class="custom-btn btn-11">Create</button>
-  
-          <input matInput type="text" [(ngModel)]="shelfName" placeholder="Shelf Name">
-          <input matInput type="text" [(ngModel)]="userId" placeholder="User ID">
-          <input matInput type="text" [(ngModel)]="catId" placeholder="Category ID">
-          <button (click)="updateStuff()" class="custom-btn btn-11">Edit</button>
-  
-          <input matInput type="text" [(ngModel)]="stuffId" placeholder="Stuff Id">
-          <button (click)="deleteStuff()" class="custom-btn btn-11">Delete</button>
-  
-          <input matInput type="text" [(ngModel)]="stuffId" placeholder="Stuff Id">
-  
-          <mat-select [formControl]="usersForm" placeholder="User" [(ngModel)]="selectedUserId">
-            <mat-select-trigger class="example-additional-selection">
-              {{ usersForm.value?.[0]?.id || '' }}
-            </mat-select-trigger>
-            <mat-option *ngFor="let user of users" [value]="user.id">
-              {{ user.userName }}
-            </mat-option>
-          </mat-select>
-          <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button> -->
-        <!-- </div>
-      </mat-card>
-    </div> -->
-    <div class="json-view">
-      <mat-card class="scrollable-card">
-        <div *ngFor="let stuff of stuffs">
-          <button matRipple class="btn-list" (click)="setStuffId(stuff)">
-            <div class="server-response">
-              <mat-card-title>{{ stuff.name }}</mat-card-title>
-              <mat-card-subtitle>Owner: {{ stuff.user.userName }}</mat-card-subtitle>
-              <mat-card-subtitle>Category: {{ stuff.shelf.name }}</mat-card-subtitle>
-            </div>
-          </button>
+  <div class="card-container">
+    <mat-card>
+      <div class="form-row">
+        <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
+
+        <input matInput type="text" [(ngModel)]="stuffName" placeholder="Name">
+        <mat-select [formControl]="shelvesForm" placeholder="shelves" [(ngModel)]="shelfId">
+          <mat-select-trigger class="example-additional-selection">
+            {{ shelvesForm.value?.[0]?.name || '' }}
+          </mat-select-trigger>
+          <mat-option *ngFor="let shelf of shelves" [value]="shelf.id">
+            {{ shelf.name }}
+          </mat-option>
+        </mat-select>
+        <mat-select [formControl]="labelForm" placeholder="labels" [(ngModel)]="labelId">
+          <mat-select-trigger class="example-additional-selection">
+            {{ labelForm.value?.[0]?.name || '' }}
+          </mat-select-trigger>
+          <mat-option *ngFor="let label of labels" [value]="label.id">
+            {{ label.name }}
+          </mat-option>
+        </mat-select>
+        <button (click)="createStuff()" class="custom-btn btn-11">Create</button>
+        <button (click)="updateStuff()" class="custom-btn btn-11">Edit</button>
+        <button (click)="deleteStuff()" class="custom-btn btn-11">Delete</button>
+        <div *ngFor="let label of labels">
+        <mat-card>
+          <input matInput type="text" [(ngModel)]="label.description" placeholder="Description">
+          <input matInput type="text" [(ngModel)]="label.texture" placeholder="Texture">
+          <input matInput type="text" [(ngModel)]="label.color" placeholder="Color">
+          <input matInput type="text" [(ngModel)]="label.size" placeholder="Size">
+          <input matInput type="number" [(ngModel)]="label.price" placeholder="Price">
+          <input matInput type="text" [(ngModel)]="label.brand" placeholder="Brand">
+        </mat-card>
         </div>
-      </mat-card>
-    </div>
+      </div>
+    </mat-card>
   </div>
-  
+  <div class="json-view">
+    <mat-card class="scrollable-card">
+      <div *ngFor="let stuff of stuffs">
+        <button matRipple class="btn-list" (click)="setStuffId(stuff)">
+          <div class="server-response">
+            <mat-card-title>{{ stuff.name }}</mat-card-title>
+            <mat-card-subtitle>Owner: {{ stuff.user.userName }}</mat-card-subtitle>
+            <mat-card-subtitle>Shelf: {{ stuff.shelf.name }}</mat-card-subtitle>
+          </div>
+        </button>
+      </div>
+    </mat-card>
+  </div>

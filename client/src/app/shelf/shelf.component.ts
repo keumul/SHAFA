@@ -67,7 +67,7 @@ export class ShelfComponent implements OnInit{
               private router: Router) {}
 
   ngOnInit() {
-    this.getCurrentUserId();
+    this.currentUserId = this.authService.getCurrentUserId()       
     console.log(this.currentUserId);
     this.getAllShelves();
     this.loadCategories();
@@ -146,7 +146,7 @@ export class ShelfComponent implements OnInit{
   }
 
   logout(){
-    window.localStorage.clear()
+    this.authService.logout()
     this.router.navigate(['login'])
   }
 
@@ -169,10 +169,6 @@ export class ShelfComponent implements OnInit{
     this.userId = this.selectedShelfId?.user?.id ?? 0;
     this.catId = this.selectedShelfId?.category?.id ?? 0;
     console.log(this.selectedShelfId);
-  }
-
-  getCurrentUserId(){
-    this.currentUserId = this.authService.getCurrentUserId()       
   }
   users?: User[]
   selectedShelfId?: Shelf

@@ -30,6 +30,7 @@ import { MatExpansionModule} from '@angular/material/expansion';
 import { MatTabsModule} from '@angular/material/tabs';
 import { TokenInterceptor } from './token.interceptor';
 import { MatSelectModule } from '@angular/material/select';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatSidenavModule,
     MatExpansionModule,
     MatTabsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatListModule
   ],
   providers: [ [
     {

@@ -11,7 +11,7 @@
 .card-container {
     margin-top: 10px;
     margin-left: 7px;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     margin-right: 1%;
 }
 .card-container mat-card{
@@ -33,7 +33,7 @@
 }
 .json-view mat-card{
   height: 450px;
-  width: 1020px;
+  width: 1032px;
   margin-bottom: 7px;
   
 }

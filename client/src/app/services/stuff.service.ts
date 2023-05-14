@@ -10,8 +10,8 @@ export class StuffService {
 
   constructor(private http: HttpClient) {}
 
-  getAllStuffs(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/stuff`);
+  getAllStuffs(user_id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/stuff/user/${user_id}`);
   }
 
   createStuff(stuffData: any): Observable<any> {
