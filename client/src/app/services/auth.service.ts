@@ -58,8 +58,15 @@ export class AuthService{
     // Add more conditions for other roles if needed
   }
 
-  getCurrentUserId(): Observable<number> {
-    return this.http.get<{id:number}>(`http://localhost:3000/api/auth/auth`).pipe(
-      map(response => response.id));
+  getCurrentUserId(){
+    const jwtToken = this.getToken();
+    if (!jwtToken)
+    return 
+    const tokenParts = jwtToken!.split('.');
+    const encodedPayload = tokenParts[1];
+    const decodedPayload = atob(encodedPayload);
+    const payload = JSON.parse(decodedPayload);
+    return payload.id
   }
+
 }

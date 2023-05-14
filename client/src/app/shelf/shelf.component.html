@@ -2,7 +2,7 @@
   <div class="card-container">
     <mat-card>
           <div class="form-row">
-            <button (click)="getAllShelves()" class="custom-btn btn-11">View</button>
+            <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
             
             
             <input matInput type="text" [(ngModel)]="newShelfName" placeholder="Name">
@@ -11,7 +11,7 @@
                 {{ shelvesForm.value?.[0]?.name || '' }}
               </mat-select-trigger>
               <mat-option *ngFor="let category of cat" [value]="category.id">
-                {{ category.id }} {{ category.name }}
+                {{ category.name }}
               </mat-option>
             </mat-select>
             <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
@@ -27,9 +27,20 @@
             <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
 
             <input matInput type="text" [(ngModel)]="shelfId" placeholder="Shelf Id">
-            <input matInput type="text" [(ngModel)]="currentUserId" [value]="selectedShelfId?.user" placeholder="User ID">
-            <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
+
+            
+            <mat-select [formControl]="usersForm" placeholder="User" [(ngModel)]="selectedUserId">
+              <mat-select-trigger class="example-additional-selection">
+                {{ usersForm.value?.[0]?.id || '' }}
+              </mat-select-trigger>
+              <mat-option *ngFor="let user of users" [value]="user.id">
+                {{user.userName}}
+              </mat-option>
+            </mat-select>
+           <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
           </div>
+          <button (click)="logout()" class="custom-btn btn-11">Logout</button>
+
     </mat-card>
   </div>
 

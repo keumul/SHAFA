@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ShelfService } from '../services/shelf.service';
 import { AuthService } from '../services/auth.service';
 import { FormControl } from '@angular/forms';
+import { UserService } from '../services/user.service';
+import { Router } from '@angular/router';
 
 interface Shelf {
   id: number;
@@ -44,9 +46,14 @@ interface SuccessResponse {
 export class ShelfComponent implements OnInit{
   newId: number = 0;
   newShelfName: string = '';
-  currentUserId: number = 0;
+
+  currentUserId!: number;
+
   shelvesForm = new FormControl();
+  usersForm = new FormControl();
+
   selectedCategoryId: number = 0;
+  selectedUserId: number = 0;
 
   shelfId: number = this.selectedShelfId?.id ?? 0;
   shelfName: string = this.selectedShelfId?.name ?? '';
@@ -54,13 +61,17 @@ export class ShelfComponent implements OnInit{
   catId: number = this.selectedShelfId?.category?.id ?? 0;
   
 
-  constructor(private shelfService: ShelfService, private authService: AuthService) {}
+  constructor(private shelfService: ShelfService, 
+              private authService:  AuthService, 
+              private userService:  UserService,
+              private router: Router) {}
 
   ngOnInit() {
     this.getCurrentUserId();
     console.log(this.currentUserId);
     this.getAllShelves();
     this.loadCategories();
+    this.loadUsers();
   }
   loadCategories() {
     this.shelfService.getAllCategories().subscribe((data: Category[]) => {
@@ -72,8 +83,19 @@ export class ShelfComponent implements OnInit{
     });
   }
 
+  loadUsers() {
+    this.userService.getAllUsers().subscribe((data: User[]) => {
+        this.users = data.map((user: any) => ({
+          id: user.id,
+          userName: user.name
+        }));
+        console.log(this.users);
+        
+      });
+  }
+
   getAllShelves() {
-    this.shelfService.getAllShelves().subscribe(
+    this.shelfService.getAllShelves(this.currentUserId).subscribe(
       (data: Shelf[]) =>{
         this.shelves = data;
         console.log(this.shelves);
@@ -123,8 +145,13 @@ export class ShelfComponent implements OnInit{
     );
   }
 
+  logout(){
+    window.localStorage.clear()
+    this.router.navigate(['login'])
+  }
+
   sharedAccess() {
-    this.shelfService.sharedAccess(this.newId, this.currentUserId).subscribe(
+    this.shelfService.sharedAccess(this.shelfId, this.currentUserId).subscribe(
       (response: any) => {
         console.log('Shared access created successfully!', response);
         this.getAllShelves();
@@ -145,18 +172,10 @@ export class ShelfComponent implements OnInit{
   }
 
   getCurrentUserId(){
-    this.authService.getCurrentUserId().subscribe(
-      (userId: number) => {
-        this.currentUserId = userId;
-        console.log(this.currentUserId)
-      },
-      (error: any) => {
-        console.error(error);
-      }
-    );
+    this.currentUserId = this.authService.getCurrentUserId()       
   }
-  users?: User;
-  selectedShelfId?: Shelf;
+  users?: User[]
+  selectedShelfId?: Shelf
   shelves?: Shelf[]
   cat?: Category[]
 }

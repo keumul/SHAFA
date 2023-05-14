@@ -13,8 +13,8 @@ export class ShelfService {
   getAllCategories(): Observable<any>{
     return this.http.get(`${this.baseUrl}/shelf/categ`);
   }
-  getAllShelves(): Observable<any>{
-    return this.http.get(`${this.baseUrl}/shelf`);
+  getAllShelves(user_id: number): Observable<any>{
+    return this.http.get(`${this.baseUrl}/shelf/user/${user_id}`);
   }
 
   createShelf(name: string, userId: number, categoryId: number) {
