@@ -16,7 +16,7 @@ class userController {
   }
     async getUsers(req, res) {
         try {
-          const user = await Users.findAll();
+          const user = await Users.findAll({ where: { roleId: "4" } });
           res.json({ user });
         } catch (error) {
           console.error(error);

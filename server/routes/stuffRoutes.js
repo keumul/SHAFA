@@ -6,11 +6,11 @@ const checkRole = require('../middleware/checkRoleMiddleware')
 router.get('/admin/', checkRole(1), stuffController.getAllStuffs);
 router.get('/admin/:id', checkRole(1), stuffController.getStuffById);
 
-router.get('/', checkRole(4), stuffController.getAllStuffs);
-router.get('/:id', checkRole(4), stuffController.getStuffById);
-router.post('/', checkRole(4), stuffController.createStuff);
-router.put('/:id', checkRole(4), stuffController.updateStuff);
-router.delete('/:id', checkRole(4), stuffController.deleteStuff);
+router.get('/', checkRole(3), stuffController.getAllStuffs);
+router.get('/:id', checkRole(3), stuffController.getStuffById);
+router.post('/', checkRole(3), stuffController.createStuff);
+router.put('/:id', checkRole(3), stuffController.updateStuff);
+router.delete('/:id', checkRole(3), stuffController.deleteStuff);
 
 module.exports = router;
 

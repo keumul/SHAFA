@@ -3,7 +3,8 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { Users, Categories } = require('../models/models')
 const { Shelves } = require('../models/models')
-const {UsersInShelves} = require('../models/models')
+const {UsersInShelves} = require('../models/models');
+const { where } = require('sequelize');
 
 class ShelfController {
   async getAllCategories(req,res){
@@ -32,6 +33,28 @@ class ShelfController {
     }
   };
   
+  async getShelfByUserId(req, res) {
+    const { user_id } = req.params;
+    try {
+      const shelves = await Shelves.findAll({
+        include: [
+          { model: Users },
+          { model: Categories }
+        ],
+        where: {
+          userId: user_id 
+        }
+      },
+      );
+
+      res.json(shelves);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something wrong while search all shelves!' });
+    }
+  };
+  
+
   async createShelf(req, res) {
     try {
       const { name, userId, categoryId } = req.body;

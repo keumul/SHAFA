@@ -31,6 +31,7 @@ const Outfits = sequelize.define('outfits', {
 
 const Stuffs = sequelize.define('stuffs', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: DataTypes.STRING, allowNull: false },
   isAvailable: { type: DataTypes.BOOLEAN, allowNull: false }
 });
 

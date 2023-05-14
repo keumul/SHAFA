@@ -1,12 +1,20 @@
 const Error = require('../errors/error');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { Stuffs } = require('../models/models')
+const { Stuffs, Users, Shelves, Labels } = require('../models/models')
 
 class StuffController {
 async getAllStuffs(req, res) {
     try {
-      const stuffs = await Stuffs.findAll();
+      const stuffs = await Stuffs.findAll(
+        {
+          include: [
+            { model: Users },
+            { model: Shelves },
+            { model: Labels }
+          ],
+        }
+      );
       res.json({ stuffs });
     } catch (error) {
       console.error(error);
