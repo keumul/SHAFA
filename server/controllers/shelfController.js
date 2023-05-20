@@ -1,10 +1,7 @@
-const Error = require('../errors/error');
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const { Users, Categories } = require('../models/models')
 const { Shelves } = require('../models/models')
-const {UsersInShelves} = require('../models/models');
-const { where } = require('sequelize');
+const { SharedAccess } = require('../models/models');
+const { Op } = require('sequelize');
 
 class ShelfController {
   async getAllCategories(req,res){
@@ -17,43 +14,97 @@ class ShelfController {
       res.status(500).json({ error: 'ERROR: Something wrong while search all categories!' });
     }
   }
-  async getAllShelves(req, res) {
-    try {
-      const shelves = await Shelves.findAll({
-        include: [
-          { model: Users },
-          { model: Categories }
-        ],
-      });
 
-      res.json(shelves);
+  async getAllShelvesAdmin(req, res) {
+    try {
+      const allShelves = await Shelves.findAll();
+  
+      res.json(allShelves);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'ERROR: Something wrong while search all shelves!' });
+      res.status(500).json({ error: 'ERROR: Something went wrong while searching all shelves!' });
+    }
+  };
+
+   async getAllShelves(req, res) {
+    try {
+      const userId = req.params.id;
+  
+      const [userShelves, sharedShelves] = await Promise.all([
+        Shelves.findAll({
+          include: [
+            {
+              model: Users,
+              where: {
+                id: userId,
+              },
+            },
+            { model: Categories },
+          ],
+        }),
+        Shelves.findAll({
+          include: [
+            {
+              model: SharedAccess,
+              where: {
+                userId,
+              },
+            },
+            { model: Categories },
+          ],
+        }),
+      ]);
+  
+      const allShelves = [...userShelves, ...sharedShelves];
+  
+      res.json(allShelves);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something went wrong while searching all shelves!' });
+    }
+  };
+
+  async addUserToShelf(req, res) {
+    try {
+      const { userId, shelfId } = req.body;
+  
+      const user = await Users.findByPk(userId);
+      const shelf = await Shelves.findByPk(shelfId);
+  
+      if (!user || !shelf) {
+        return res.status(404).json({ message: 'User or shelf not found' });
+      }
+  
+      const sharedAccess = await SharedAccess.findOne({ where: { userId, shelfId } });
+  
+      if (sharedAccess) {
+        return res.status(409).json({ message: 'User already has access to the shelf' });
+      }
+  
+      // Создаем новую запись в SharedAccess
+      await SharedAccess.create({ userId, shelfId });
+  
+      return res.status(200).json({ message: 'User added to shelf successfully' });
+    } catch (error) {
+      console.error('Error adding user to shelf:', error);
+      return res.status(500).json({ message: 'Failed to add user to shelf' });
     }
   };
   
-  async getShelfByUserId(req, res) {
-    const { user_id } = req.params;
-    try {
-      const shelves = await Shelves.findAll({
-        include: [
-          { model: Users },
-          { model: Categories }
-        ],
-        where: {
-          userId: user_id 
-        }
-      },
-      );
+  // async getUserWithShelfs(req, res) {
+  //   try {
+  //     const { id } = req.params;
+  //     const user = await Users.findOne({
+  //       where: { id: id },
+  //       include: Shelves,
+  //     });
 
-      res.json(shelves);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'ERROR: Something wrong while search all shelves!' });
-    }
-  };
-  
+  //     return user;
+  //   } catch (error) {
+  //     console.error('Error retrieving user with shelfs:', error);
+  //     throw error;
+  //   }
+  // }
 
   async createShelf(req, res) {
     try {
@@ -73,20 +124,14 @@ class ShelfController {
   
   async sharedAccess(req, res) {
     try {
-        const { shelfId } = req.params;
-        const { userId } = req.body;
-        const sharedAccess = await UsersInShelves.create({shelfId, userId}, {
-          include: [
-            { model: Users },
-            { model: Categories }
-          ],
-        });
-        res.status(201).json({ sharedAccess: sharedAccess });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'ERROR: Something went wrong with shared access!' });
-      }
-}
+      const { userId, shelfId } = req.body;
+      const sharedAccess = await SharedAccess.create({ shelfId, userId });
+      res.status(201).json({ sharedAccess: sharedAccess });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something went wrong with shared access!' });
+    }
+  }
 
 async getShelfById(req, res) {
   try {

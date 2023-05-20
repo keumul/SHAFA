@@ -15,16 +15,13 @@ class UserController {
     async registration(req, res, next) {
           const { userName, email, password, pronounces, roleId } = req.body;
       
-          // Проверка наличия пользователя с тем же email
           const existingUser = await Users.findOne({ where: { email } });
           if (existingUser) {
             return res.status(400).json({ error: 'INFO: User already exists!' });
           }
-      
-          // Хэширование пароля
+
           const hashedPassword = await bcrypt.hash(password, 10);
-      
-          // Создание нового пользователя
+
           const newUser = await Users.create({
             userName,
             email,
@@ -52,7 +49,7 @@ class UserController {
         return res.json({token})
     }
     
-    async check(req, res, next) {
+    async getUserInfoWithToken(req, res, next) {
         try {
             const userId = req.user.id;
             const user = await Users.findOne({ where: { id: userId } });
@@ -63,7 +60,6 @@ class UserController {
             const token = generateJwt(user.id, user.userName, user.email);
             return res.json({id: userId });
           } catch (error) {
-            // Handle any errors that occur during the process
             return next(error);
           }
     }

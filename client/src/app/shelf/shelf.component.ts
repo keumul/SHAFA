@@ -3,18 +3,20 @@ import { ShelfService } from '../services/shelf.service';
 import { AuthService } from '../services/auth.service';
 import { FormControl } from '@angular/forms';
 import { UserService } from '../services/user.service';
-import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 interface Shelf {
   id: number;
   name: string;
   user: User;
   category: Category;
+  sharedUsers: User[];
+  sharedAccess: boolean;
 }
 
 interface User {
   id: number;
-  userName: string
+  userName: string;
 }
 
 interface Category {
@@ -22,21 +24,6 @@ interface Category {
   name: string;
 }
 
-interface SharedAccess {
-  sharedAccess: any;
-}
-
-interface ShelfResponse {
-  shelf: Shelf;
-}
-
-interface ErrorResponse {
-  error: string;
-}
-
-interface SuccessResponse {
-  message: string;
-}
 
 @Component({
   selector: 'app-shelf',
@@ -48,7 +35,7 @@ export class ShelfComponent implements OnInit{
   newShelfName: string = '';
 
   currentUserId!: number;
-
+  accessUserId!: number;
   shelvesForm = new FormControl();
   usersForm = new FormControl();
 
@@ -64,11 +51,10 @@ export class ShelfComponent implements OnInit{
   constructor(private shelfService: ShelfService, 
               private authService:  AuthService, 
               private userService:  UserService,
-              private router: Router) {}
+              private toastr: ToastrService) {}
 
   ngOnInit() {
-    this.currentUserId = this.authService.getCurrentUserId()       
-    console.log(this.currentUserId);
+    this.currentUserId = this.authService.getCurrentUserId()?.id;       
     this.getAllShelves();
     this.loadCategories();
     this.loadUsers();
@@ -79,40 +65,39 @@ export class ShelfComponent implements OnInit{
         id: category.id,
         name: category.name
       }));
-      console.log(this.cat);
     });
   }
 
   loadUsers() {
-    this.userService.getAllUsers().subscribe((data: User[]) => {
-        this.users = data.map((user: any) => ({
+    this.userService.getAllUsers().subscribe((data: {user: User[]}) => {
+      console.log(data); 
+        this.users = data.user.map((user: any) => ({
           id: user.id,
-          userName: user.name
-        }));
+          userName: user.userName
+        })); 
         console.log(this.users);
-        
       });
   }
 
   getAllShelves() {
     this.shelfService.getAllShelves(this.currentUserId).subscribe(
-      (data: Shelf[]) =>{
-        this.shelves = data;
-        console.log(this.shelves);
-        
+      (data: Shelf[]) => {
+        this.shelves = data.map((shelf: Shelf) => ({
+          ...shelf,
+          // sharedAccess: shelf.sharedUsers.length > 0
+        }));
       },
       (error: any) => {
         console.error(error);
       }
-    );    
+    );
   }
+  
 
   createShelf() {
-    this.shelfService.createShelf(this.newShelfName, this.currentUserId, this.selectedCategoryId).subscribe(
+    this.shelfService.createShelf(this.shelfName, this.currentUserId, this.selectedCategoryId).subscribe(
       (response: any) => {
-        console.log('Shelf created successfully!', response);
         this.getAllShelves();
-        // this.resetInputFields();
       },
       (error) => {
         console.error(error);
@@ -124,7 +109,6 @@ export class ShelfComponent implements OnInit{
 
     this.shelfService.updateShelf(this.shelfId, this.shelfName, this.userId, this.catId).subscribe(
       (response: any) => {
-        console.log('Shelf updated successfully!', response);
         this.getAllShelves();
       },
       (error) => {
@@ -136,7 +120,6 @@ export class ShelfComponent implements OnInit{
   deleteShelf() {
     this.shelfService.deleteShelf(this.shelfId).subscribe(
       (response: any) => {
-        console.log('Shelf deleted successfully!', response);
         this.getAllShelves();
       },
       (error) => {
@@ -145,19 +128,14 @@ export class ShelfComponent implements OnInit{
     );
   }
 
-  logout(){
-    this.authService.logout()
-    this.router.navigate(['login'])
-  }
-
   sharedAccess() {
-    this.shelfService.sharedAccess(this.shelfId, this.currentUserId).subscribe(
-      (response: any) => {
-        console.log('Shared access created successfully!', response);
-        this.getAllShelves();
+    console.log(this.selectedUserId, this.selectedShelfId!.id);
+    this.shelfService.sharedAccess(this.selectedUserId, this.selectedShelfId!.id).subscribe(
+      (response) => {
+        this.toastr.success('User added to shelf successfully', 'Success');
       },
       (error) => {
-        console.error(error);
+        this.toastr.error('Failed to add user to shelf:', error);
       }
     );
   }
@@ -168,7 +146,6 @@ export class ShelfComponent implements OnInit{
     this.shelfName = this.selectedShelfId?.name ?? '';
     this.userId = this.selectedShelfId?.user?.id ?? 0;
     this.catId = this.selectedShelfId?.category?.id ?? 0;
-    console.log(this.selectedShelfId);
   }
   users?: User[]
   selectedShelfId?: Shelf

@@ -12,4 +12,16 @@ export class UserService {
   getAllUsers(): Observable<any>{
     return this.http.get(`${this.baseUrl}/user`);
   }
+
+  getUserRole(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/user/role/${id}`);
+  }
+
+  getUsers(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/user/`);
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/user/${id}`);
+  }
 }

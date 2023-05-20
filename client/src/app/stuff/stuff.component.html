@@ -5,46 +5,52 @@
         <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
 
         <input matInput type="text" [(ngModel)]="stuffName" placeholder="Name">
-        <mat-select [formControl]="shelvesForm" placeholder="shelves" [(ngModel)]="shelfId">
-          <mat-select-trigger class="example-additional-selection">
-            {{ shelvesForm.value?.[0]?.name || '' }}
-          </mat-select-trigger>
+        <mat-select [formControl]="stuffForm" placeholder="Shelves" [(ngModel)]="shelfId">
           <mat-option *ngFor="let shelf of shelves" [value]="shelf.id">
             {{ shelf.name }}
-          </mat-option>
-        </mat-select>
-        <mat-select [formControl]="labelForm" placeholder="labels" [(ngModel)]="labelId">
-          <mat-select-trigger class="example-additional-selection">
-            {{ labelForm.value?.[0]?.name || '' }}
-          </mat-select-trigger>
-          <mat-option *ngFor="let label of labels" [value]="label.id">
-            {{ label.name }}
           </mat-option>
         </mat-select>
         <button (click)="createStuff()" class="custom-btn btn-11">Create</button>
         <button (click)="updateStuff()" class="custom-btn btn-11">Edit</button>
         <button (click)="deleteStuff()" class="custom-btn btn-11">Delete</button>
-        <div *ngFor="let label of labels">
-        <mat-card>
-          <input matInput type="text" [(ngModel)]="label.description" placeholder="Description">
-          <input matInput type="text" [(ngModel)]="label.texture" placeholder="Texture">
-          <input matInput type="text" [(ngModel)]="label.color" placeholder="Color">
-          <input matInput type="text" [(ngModel)]="label.size" placeholder="Size">
-          <input matInput type="number" [(ngModel)]="label.price" placeholder="Price">
-          <input matInput type="text" [(ngModel)]="label.brand" placeholder="Brand">
-        </mat-card>
         </div>
-      </div>
+        <div class="label-editor" *ngIf="selectedStuff?.label">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.description" placeholder="Description">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.texture" placeholder="Texture">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.color" placeholder="Color">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.size" placeholder="Size">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.price" placeholder="Price">
+          <input matInput type="text" [(ngModel)]="selectedStuff.label!.brand" placeholder="Brand">
+          <button (click)="updateLabel()" class="custom-btn btn-11">Update</button>
+          <button (click)="deleteLabel()" class="custom-btn btn-11">Delete</button>
+        </div>
+        <div class="label-editor" *ngIf="!selectedStuff?.label" >
+          <input matInput type="text" [(ngModel)]="newLDescription" placeholder="Description">
+          <input matInput type="text" [(ngModel)]="newTexture" placeholder="Texture">
+          <input matInput type="text" [(ngModel)]="newColor" placeholder="Color">
+          <input matInput type="text" [(ngModel)]="newSize" placeholder="Size">
+          <input matInput type="text" [(ngModel)]="newPrice" placeholder="Price">
+          <input matInput type="text" [(ngModel)]="newBrand" placeholder="Brand">
+          <button (click)="createLabel()" class="custom-btn btn-11">Create</button>
+        </div>
     </mat-card>
   </div>
+
   <div class="json-view">
     <mat-card class="scrollable-card">
       <div *ngFor="let stuff of stuffs">
-        <button matRipple class="btn-list" (click)="setStuffId(stuff)">
+        <button matRipple matTooltip="{{stuff.label?.description}}
+                                      {{stuff.label?.texture}}
+                                      {{stuff.label?.color}}
+                                      {{stuff.label?.size}}
+                                      {{stuff.label?.price}}
+                                      {{stuff.label?.brand}}" 
+                                      class="btn-list" (click)="setStuffId(stuff)" >
           <div class="server-response">
             <mat-card-title>{{ stuff.name }}</mat-card-title>
             <mat-card-subtitle>Owner: {{ stuff.user.userName }}</mat-card-subtitle>
             <mat-card-subtitle>Shelf: {{ stuff.shelf.name }}</mat-card-subtitle>
+
           </div>
         </button>
       </div>

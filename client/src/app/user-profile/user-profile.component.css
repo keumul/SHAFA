@@ -5,26 +5,25 @@ mat-tab-group {
 	transform: translate3d(0, 0, 0);
     color: rgb(0, 0, 0);
     height: 100%;
-    font-family: 'Bad Script';
 }
 .full-width-label {
     display: block;
     width: 100%;
     text-align: center;
     height: 100%;
-    font-family: 'Sacramento';
-    font-size: 30px;
+    font-size: 20px;
+    font-style: bold;
   }
   
-text-logo{
-    font-family: 'Sacramento';
+.text-logo{
+    color: #4a148c;
     text-align: center;
 }
 mat-toolbar{
     color: #7D89C3;
     background: linear-gradient(#ffffff, #e2e0fa);
-    font-family: 'Sacramento';
-    font-size: 30px;
+    font-size: 20px;
+    font-style: bold;
 }
 .example-spacer {
     flex: 100 1 auto;
@@ -35,12 +34,36 @@ mat-toolbar{
     background-position: center center;
     background-repeat: no-repeat;
 }
-@font-face {
-    font-family: 'Sacramento';
-    src: url('../../assets/Sacramento-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+
+.btn-11 {
+    border: none;
+    background: #4a148c;
+      color: #fff;
+      font-size: 16px;
+      overflow: hidden;
+  }
+  .btn-11:hover {
+      text-decoration: none;
+      color: #fff;
+  }
+  .btn-11:hover{
+    opacity: .7;
+  }
+  .btn-11:active{
+    box-shadow:  4px 4px 6px 0 rgba(255,255,255,.3),
+                -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+      inset -4px -4px 6px 0 rgba(255,255,255,.2),
+      inset 4px 4px 6px 0 rgba(0, 0, 0, .2);
+  }
+  
+  
+  @-webkit-keyframes shiny-btn1 {
+      0% { -webkit-transform: scale(0) rotate(45deg); opacity: 0; }
+      80% { -webkit-transform: scale(0) rotate(45deg); opacity: 0.5; }
+      81% { -webkit-transform: scale(4) rotate(45deg); opacity: 1; }
+      100% { -webkit-transform: scale(50) rotate(45deg); opacity: 0; }
+  }
+
 @keyframes gradient {
 	0% {
 		background-position: 0% 50%;
@@ -52,3 +75,4 @@ mat-toolbar{
 		background-position: 0% 50%;
 	}
 }
+

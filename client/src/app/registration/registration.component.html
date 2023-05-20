@@ -1,6 +1,6 @@
 <div>
     <mat-card class="registration-form">
-        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" >
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" >
 
       <mat-card-header>
         <mat-card-title class="welcome-text">Welcome to <span>SHAFA!</span></mat-card-title>
@@ -38,6 +38,7 @@
         <button mat-raised-button color="primary" type="submit" 
         [disabled]="registrationForm.invalid">OK!</button>
       </mat-card-actions>
+      <span (click)="goToLogin()">Back to Login?</span>
     </form>
     </mat-card>
   </div>

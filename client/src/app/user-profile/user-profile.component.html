@@ -1,8 +1,12 @@
 <mat-toolbar>
     <span class="text-logo">Your personal Shafa ☆</span>
     <span class="example-spacer"></span>
-      <mat-icon class="icon-user">profile</mat-icon>
-  </mat-toolbar>  
+    <button mat-button [matMenuTriggerFor]="menu" class="btn-11">✉</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="chat()">Chat</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+</mat-toolbar>  
 
   <mat-tab-group>
     <mat-tab>

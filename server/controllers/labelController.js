@@ -12,7 +12,6 @@ async getAllLabels(req, res) {
     }
   };
   
-  // Создать новый ярлык
 async createLabel(req, res){
     try {
       const { description, texture, color, size, price, brand } = req.body;
@@ -24,7 +23,6 @@ async createLabel(req, res){
     }
   };
   
-// Обновить информацию о ярлыке
 async updateLabel(req, res) {
     try {
       const { id } = req.params;
@@ -45,7 +43,6 @@ async updateLabel(req, res) {
     }
   };
   
-  // Удалить ярлык
   async deleteLabel(req, res) {
     try {
       const { id } = req.params;

@@ -14,7 +14,7 @@ export class ShelfService {
     return this.http.get(`${this.baseUrl}/shelf/categ`);
   }
   getAllShelves(user_id: number): Observable<any>{
-    return this.http.get(`${this.baseUrl}/shelf/user/${user_id}`);
+    return this.http.get(`${this.baseUrl}/shelf/${user_id}`);
   }
 
   createShelf(name: string, userId: number, categoryId: number) {
@@ -22,10 +22,11 @@ export class ShelfService {
     return this.http.post(`${this.baseUrl}/shelf`, body);
   }
 
-  sharedAccess(shelfId: number, userId: number) {
-    const body = { userId };
-    return this.http.post(`${this.baseUrl}/shelf/${shelfId}`, body);
+  sharedAccess(userId: number, shelfId: number) {
+    const body = { userId, shelfId };
+    return this.http.post(`${this.baseUrl}/shelf/access`, body);
   }
+  
 
   updateShelf(id: number, name: string, userId: number, categoryId: number) {
     const body = { name, userId, categoryId };

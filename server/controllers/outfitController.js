@@ -1,11 +1,12 @@
-const { Outfits } = require('../models/models');
+const { Outfits, Users } = require('../models/models');
 const { Stuffs } = require('../models/models');
-const { StuffsInOutfits } = require('../models/models');
+const { OutfitStuff } = require('../models/models');
 
 class outfitController{
 async createOutfit(req, res) {
   try {
-    const newOutfit = await Outfits.create({});
+    const { name, stuffId, userId } = req.body;
+    const newOutfit = await Outfits.create({name: name, stuffId: stuffId, userId: userId});
     res.status(201).json({ outfit: newOutfit });
   } catch (error) {
     console.error(error);
@@ -13,36 +14,52 @@ async createOutfit(req, res) {
   }
 };
 
-async addStuffToOutfit(req, res) {
-    try {
-        const { outfitId } = req.params;
-        const { stuffId } = req.body;
-        const fillOutfit = await StuffsInOutfits.create({outfitId, stuffId});
-        res.status(201).json({ filledStuff: fillOutfit });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'ERROR: Something went wrong with adding stuff to outfit!' });
-      }
+async addStuffToOutfit(req, res) { 
+  const { outfitId } = req.params;
+  const { stuffId } = req.body;
+  console.log(outfitId, stuffId);
+  const fillOutfit = await OutfitStuff.create({outfitId, stuffId});
+  res.status(201).json({ filledStuff: fillOutfit });
 }
 
-async getAllOutfits(req, res) {
+async getOutfitsByUser(req, res) {
   try {
-    const outfits = await Outfits.findAll();
-    res.json({ outfits });
+    const { id } = req.params;
+    const uniqueOutfits = await Outfits.findAll({
+      attributes: ['id', 'name'],
+      include: [
+        {
+          model: Stuffs,
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        },
+      ],
+      group: ['outfits.id', 'outfits.name', 'stuffs.id', 'stuffs.name'], 
+    });
+    if (!uniqueOutfits) {
+      return res.status(404).json({ error: 'ERROR: Outfit not found!' });
+    }
+    res.json({ uniqueOutfits });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'ERROR: Something went wrong while retrieving the outfits!' });
+    res.status(500).json({ error: 'ERROR: Something went wrong while retrieving the outfit!' });
   }
 };
 
-async getOutfitById(req, res) {
+async getAllStuffInOutfit(req, res) {
   try {
-    const { id } = req.params;
-    const outfit = await Outfits.findByPk(id);
-    if (!outfit) {
-      return res.status(404).json({ error: 'ERROR: Outfit not found!' });
-    }
-    res.json({ outfit });
+    // const outfit = await StuffsInOutfits.findAll(
+    //   {
+    //     include: [
+    //       {model: Stuffs},
+    //       {model: Outfits}
+    //     ]
+    //   }
+    // );
+    // if (!outfit) {
+    //   return res.status(404).json({ error: 'ERROR: Outfit not found!' });
+    // }
+    // res.json({ outfit });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'ERROR: Something went wrong while retrieving the outfit!' });
@@ -53,7 +70,6 @@ async updateOutfit(req, res) {
   try {
     const { id } = req.params;
     const { stuffId, outfitId } = req.body;
-    const updatedOutfit = await StuffsInOutfits.update({outfitId, stuffId}, { where: { id } });
 
     if (updatedOutfit[0] === 0) {
       return res.status(404).json({ error: 'ERROR: Outfit not found!' });

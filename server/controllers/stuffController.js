@@ -1,7 +1,7 @@
 const Error = require('../errors/error');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { Stuffs, Users, Shelves, Labels } = require('../models/models')
+const { Stuffs, Users, Shelves, Labels, StuffsInOutfits, Outfits } = require('../models/models')
 
 class StuffController {
 async getAllStuffs(req, res) {
@@ -37,6 +37,28 @@ async getAllStuffs(req, res) {
           }
         }
       );
+      res.json({ stuffs });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'ERROR: Something went wrong while fetching stuffs!' });
+    }
+  }
+
+  async getStuffByOutfit(req, res){
+    const { outfit_id } = req.params;
+    try {
+      const stuffs = await StuffsInOutfits.findAll(
+        {
+          include: [
+            {model: Stuffs},
+            {model: Outfits},
+          ],
+          where : {
+            outfitId: outfit_id
+          }
+        }
+      );
+      console.log(outfit_id);
       res.json({ stuffs });
     } catch (error) {
       console.error(error);

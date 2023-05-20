@@ -8,6 +8,9 @@ import { Component } from '@angular/core';
 
 export class AppCategoryListComponent {
   selectedComponent: string;
+   errorMessage: string = '';
+  successMessage: string = '';
+
 
   constructor() {
     this.selectedComponent = 'shelf'; 

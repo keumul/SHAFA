@@ -1,0 +1,28 @@
+<div class="container">
+  <mat-card>
+    <h1>SHAFA-CHAT</h1>
+    <label>*you are now visible as <span class="message-username">{{currentUser.email}}</span></label>
+    <div class="input-form">
+      <mat-form-field>
+        <input matInput type="text" [(ngModel)]="newMessage" placeholder="Send something">
+      </mat-form-field>      
+      <div class="button-list">
+      <button mat-icon-button (click)="sendMessage(currentUser.email, newMessage)" class="btn-11">
+        Send
+      </button>
+      <button (click)="redirectToHomePage()" class="btn-11-back">Back</button>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="message-card">
+    <div class="message" #messageContainer>
+      <div *ngFor="let message of messages; let i = index">
+        <div>
+          <span class="message-username">{{message.username}}</span>: 
+          {{message.message}}
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

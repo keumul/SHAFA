@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +11,14 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  currentUserRole: any;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -21,6 +28,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  goToLogin(){
+    this.router.navigate(['/register']);
+  }
+  chat(){
+    this.router.navigate(['chat'])
+  }
   onSubmit(): void {
     if (this.loginForm.invalid) {
       return;
@@ -28,15 +41,21 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(this.loginForm)
       .subscribe(
-        () => {
-          // Handle successful login
-          // Redirect or show success message
+        (response) => {
+          this.currentUserRole = this.authService.getCurrentUserId()?.roleId;
+
+          if (this.currentUserRole === 2) {
+            this.router.navigate(['/user-profile']);
+            this.toastr.success('Logged in as user.', 'Success');
+          } else if (this.currentUserRole === 1) {
+            this.router.navigate(['/admin-panel']);
+            this.toastr.success('Logged in as admin.', 'Success');
+          }
         },
         (error) => {
-          // Handle error
-          // Show error message
+          this.toastr.error('Invalid email or password.', 'Error');
+          console.error(error);
         }
       );
-      this.router.navigate(['/user-profile']);
   }
 }

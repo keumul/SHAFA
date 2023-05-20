@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LabelService } from '../services/label.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Label {
   id: number;
@@ -18,9 +19,12 @@ interface Label {
   providers: [LabelService]
 })
 export class LabelComponent implements OnInit {
-  labels: Label[] = [];
+  constructor(private labelService: LabelService, private toastr: ToastrService){}
 
-  constructor(private labelService: LabelService) {}
+  labels: Label[] = [];
+  errorMessage: string = '';
+  successMessage: string = '';
+
 
   ngOnInit() {
     this.getAllLabels();
@@ -30,9 +34,12 @@ export class LabelComponent implements OnInit {
     this.labelService.getAllLabels().subscribe(
       (data: { labels: Label[] }) => {
         this.labels = data.labels;
-        console.log(this.labels);
+        this.successMessage = '';
+        this.errorMessage = '';
       },
       (error: any) => {
+        this.labels = [];
+        this.errorMessage = 'An error occurred while retrieving labels.';
         console.error(error);
       }
     );
@@ -51,10 +58,12 @@ export class LabelComponent implements OnInit {
 
     this.labelService.createLabel(newLabel).subscribe(
       (response: { label: Label }) => {
-        console.log('Label created successfully!', response.label);
         this.getAllLabels();
+        this.successMessage = 'Label created successfully.';
+        this.errorMessage = '';
       },
       (error: any) => {
+        this.errorMessage = 'An error occurred while creating the label.';
         console.error(error);
       }
     );
@@ -73,10 +82,12 @@ export class LabelComponent implements OnInit {
 
     this.labelService.updateLabel(updatedLabel.id, updatedLabel).subscribe(
       (response: { message: string }) => {
-        console.log('Label updated successfully!', response.message);
         this.getAllLabels();
+        this.successMessage = 'Label updated successfully.';
+        this.errorMessage = '';
       },
       (error: any) => {
+        this.errorMessage = 'An error occurred while updating the label.';
         console.error(error);
       }
     );
@@ -85,10 +96,12 @@ export class LabelComponent implements OnInit {
   deleteLabel(label: Label) {
     this.labelService.deleteLabel(label.id).subscribe(
       (response: { message: string }) => {
-        console.log('Label deleted successfully!', response.message);
         this.getAllLabels();
+        this.successMessage = 'Label deleted successfully.';
+        this.errorMessage = '';
       },
       (error: any) => {
+        this.errorMessage = 'An error occurred while deleting the label.';
         console.error(error);
       }
     );

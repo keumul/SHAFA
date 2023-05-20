@@ -68,7 +68,7 @@ export class AuthService{
     const encodedPayload = tokenParts[1];
     const decodedPayload = atob(encodedPayload);
     const payload = JSON.parse(decodedPayload);
-    return payload.id
+    return { id: payload.id, roleId: payload.roleId, email: payload.email }
   }
 
 }

@@ -10,7 +10,7 @@ export class StuffService {
 
   constructor(private http: HttpClient) {}
 
-  getAllStuffs(user_id: number): Observable<any> {
+  getAllStuffsByUser(user_id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/stuff/user/${user_id}`);
   }
 

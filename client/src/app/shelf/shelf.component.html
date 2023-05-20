@@ -1,50 +1,48 @@
 <div class="container">
   <div class="card-container">
     <mat-card>
-          <div class="form-row">
-            <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
-            <input matInput type="text" [(ngModel)]="shelfName" placeholder="Name">
-            <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
-              <mat-select-trigger class="example-additional-selection">
-                {{ shelvesForm.value?.[0]?.name || '' }}
-              </mat-select-trigger>
-              <mat-option *ngFor="let category of cat" [value]="category.id">
-                {{ category.name }}
-              </mat-option>
-            </mat-select>
-            <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
-            <button (click)="updateShelf()" class="custom-btn btn-11">Edit</button>
-            <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
+      <div class="form-row">
+        <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
+        <input matInput type="text" [(ngModel)]="shelfName" placeholder="Name">
+        <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
+          <mat-option *ngFor="let category of cat" [value]="category.id">
+            {{ category.name }}
+          </mat-option>
+        </mat-select>            
+        <button (click)="createShelf()" class="custom-btn btn-11">Create</button>
+        <button (click)="updateShelf()" class="custom-btn btn-11">Edit</button>
+        <button (click)="deleteShelf()" class="custom-btn btn-11">Delete</button>
 
-            <input matInput type="text" [(ngModel)]="shelfId" placeholder="Shelf Id">
-
-            
-            <mat-select [formControl]="usersForm" placeholder="User" [(ngModel)]="selectedUserId">
-              <mat-select-trigger class="example-additional-selection">
-                {{ usersForm.value?.[0]?.id || '' }}
-              </mat-select-trigger>
-              <mat-option *ngFor="let user of users" [value]="user.id">
-                {{user.userName}}
-              </mat-option>
-            </mat-select>
-           <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
-           <button (click)="logout()" class="custom-btn btn-11">Logout</button>
+        <mat-select [formControl]="usersForm" placeholder="User" [(ngModel)]="selectedUserId">
+          <div *ngFor="let user of users">
+            <mat-option *ngIf="user.id !== currentUserId" [value]="user.id" [(ngModel)]="accessUserId">
+              {{user.userName}}
+            </mat-option>
           </div>
-          
-
+        </mat-select>
+        <button (click)="sharedAccess()" class="custom-btn btn-11">Share</button>
+      </div>
     </mat-card>
   </div>
 
   <div class="json-view">
     <mat-card class="scrollable-card">
-      <div *ngFor="let shelve of shelves">
-        <button matRipple class="btn-list" (click)="setShelveId(shelve)">
+      <div *ngFor="let shelf of shelves">
+        <button matRipple class="btn-list" (click)="setShelveId(shelf)">
           <div class="server-response">
-            <mat-card-title>{{ shelve.name }}</mat-card-title>
-            <mat-card-subtitle>Owner: {{ shelve.user.userName }}</mat-card-subtitle>
-            <mat-card-subtitle>Category: {{ shelve.category.name }}</mat-card-subtitle>
-          </div>
+            <div *ngIf="!shelf.sharedAccess">
+              <h3>{{ shelf.name }}</h3>
+              <p>Owner: {{ shelf.user?.userName ?? 'Not you :)' }}</p>
+              <p>Category: {{ shelf.category.name }}</p>
+            </div>
+            <div *ngIf="shelf.sharedAccess">
+              <h3>{{ shelf.name }}</h3>
+              <p>Shared with: {{ shelf.sharedUsers?.length ?? 0 }} users</p>
+              <p>Category: {{ shelf.category?.name ?? 'Unknown' }}</p>
+            </div>
+        </div>
         </button>
+        
       </div>
     </mat-card>
   </div>

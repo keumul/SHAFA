@@ -1,0 +1,24 @@
+<mat-toolbar>
+  <span class="text-logo">Your personal Shafa ☆</span>
+  <span class="example-spacer"></span>
+  <button mat-button [matMenuTriggerFor]="menu" class="btn-11">✉</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
+</mat-toolbar>  
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="full-width-label">Shafa</span>
+      </ng-template>
+      <app-shafa></app-shafa>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="full-width-label">Users</span>
+      </ng-template>
+      <app-user></app-user>
+    </mat-tab>
+  </mat-tab-group>
+  

@@ -1,7 +1,7 @@
 <div class="login-form">
   <mat-card>
     <mat-card-header>
-      <h2 class="welcome-text">Oh, hello! Сome quickly to SHAFA! </h2>
+      <h2 class="welcome-text">Oh, hello! Сome quickly to <span>SHAFA!</span> </h2>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -14,7 +14,10 @@
           <input matInput formControlName="password" type="password" placeholder="Enter your password">
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit">OK!</button>
+        <label>The new guy? <span (click)="goToLogin()">Register</span></label>
       </form>
     </mat-card-content>
   </mat-card>
+  <label class="chat-text">But you can chat without registration!</label>
+  <button (click)="chat()" class="chat">SHAFA-CHAT</button>
 </div>

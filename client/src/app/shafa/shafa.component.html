@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="card-container">
+        <mat-card>
+            <div class="form-row">
+                <button (click)="getAllShelves()" class="custom-btn btn-11">Shelves</button>
+                <button (click)="getAllStuffs()" class="custom-btn btn-11">Stuffs</button>
+            </div>
+        </mat-card>
+    </div>
+
+    <div class="json-view">
+        <mat-card class="scrollable-card">
+            <div *ngIf="whatisopen === 'shelves'">
+                <div *ngFor="let shelf of shelves">
+                    <button matRipple class="btn-list">
+                        <div class="server-response">
+                            <mat-card-title>{{ shelf.name }}</mat-card-title>
+                            <mat-card-subtitle>Owner: {{ shelf.user.userName }} - {{ shelf.user.email }}</mat-card-subtitle>
+                            <mat-card-subtitle>Category: {{ shelf.category.name }}</mat-card-subtitle>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="whatisopen === 'stuffs'">
+                <div *ngFor="let stuff of stuffs">
+                    <button matRipple class="btn-list">
+                        <div class="server-response">
+                            <mat-card-title>{{ stuff.name }}</mat-card-title>
+                            <mat-card-subtitle>Owner: {{ stuff.user.userName }} - {{ stuff.user.email }}</mat-card-subtitle>
+                            <mat-card-subtitle>Shelf: {{ stuff.shelf.name }}</mat-card-subtitle>
+                            <mat-card-subtitle *ngIf="stuff.label !== null">Label: {{ stuff.label?.description }}</mat-card-subtitle>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>

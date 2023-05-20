@@ -13,7 +13,7 @@ interface Stuff {
   labelId: number;
   user: User;
   shelf: Shelf;
-  label: Label;
+  label?: Label;
   userId: number;
   shelfId: number;
   isAvailable: boolean;
@@ -32,11 +32,6 @@ interface Shelf{
   name: string
 }
 
-interface Label {
-  id: number;
-  name: string;
-}
-
 interface User {
   id: number;
   userName: string;
@@ -49,8 +44,16 @@ interface User {
 })
 export class StuffComponent implements OnInit {
   stuffs: Stuff[] = [];
-  labels: Label[] = [];
   users: User[] = [];
+  showCard: boolean = false;
+  newLDescription: string = '';
+  newTexture: string = '';
+  newColor: string = '';
+  newSize: number = 0;
+  newPrice: number = 0;
+  newBrand: string = '';
+  newLable!: Label;
+
   constructor(private stuffService: StuffService,
               private userService: UserService,
               private authService: AuthService,
@@ -58,22 +61,18 @@ export class StuffComponent implements OnInit {
               private labelService:LabelService,
               private router: Router) {}
   ngOnInit() {
-    this.currentUserId = this.authService.getCurrentUserId()  
+    this.currentUserId = this.authService.getCurrentUserId()?.id
          
     this.getAllStuffs();
-    this.loadShelves()
-    //this.getAllLabels();
-    console.log(this.currentUserId);
-    // this.getAllUsers();
+    this.loadShelves();
   }
 
 
   currentUserId!: number;
   getAllStuffs() {
-    this.stuffService.getAllStuffs(this.currentUserId).subscribe(
+    this.stuffService.getAllStuffsByUser(this.currentUserId).subscribe(
       (data: any) => {
         this.stuffs = data.stuffs;
-        console.log(this.stuffs);
       },
       (error: any) => {
         console.error(error);
@@ -81,23 +80,10 @@ export class StuffComponent implements OnInit {
     );
   }
 
-  // getAllLabels() {
-  //   this.stuffService.getAllLabels().subscribe(
-  //     (data: Label[]) => {
-  //       this.labels = data;
-  //       console.log(this.labels);
-  //     },
-  //     (error: any) => {
-  //       console.error(error);
-  //     }
-  //   );
-  // }
-
   getAllUsers() {
     this.userService.getAllUsers().subscribe(
       (data: User[]) => {
         this.users = data;
-        console.log(this.users);
       },
       (error: any) => {
         console.error(error);
@@ -108,19 +94,19 @@ export class StuffComponent implements OnInit {
   loadShelves() {
     this.shelfService.getAllShelves(this.currentUserId).subscribe((
       data: Shelf[]) => {
-      this.shelves = data
-      console.log(this.shelves);
+      this.shelves = data.map((shelf: any) => ({
+        id: shelf?.id,
+        name: shelf?.name
+      }));      
     });
   }
 
     createStuff() {
       this.stuffService.createStuff({name: this.stuffName, 
-                                    labelId: this.labelId,
                                     userId: this.currentUserId,
                                     shelfId: this.shelfId,
                                     isAvailable: true}).subscribe(
         (response: any) => {
-          console.log('Stuff created successfully!', response);
           this.ngOnInit();
         },
         (error) => {
@@ -129,14 +115,57 @@ export class StuffComponent implements OnInit {
       );
     }
 
+    createLabel() {
+      this.labelService.createLabel({
+        id: this.newLable,
+        description: this.newLDescription,
+        texture: this.newTexture,
+        color: this.newColor,
+        size: this.newSize,
+        price: this.newPrice,
+        brand: this.newBrand}).subscribe(
+        (response: any) => {
+          this.newLable = response.label;
+        this.stuffService.updateStuff(this.selectedStuff.id, {
+        name: this.stuffName, 
+        labelId: this.newLable.id,
+        userId: this.currentUserId,
+        shelfId: this.shelfId,
+        isAvailable: true}).subscribe(() => {
+          this.ngOnInit();
+        })
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+      
+    }
+
     updateStuff() {
-      this.stuffService.updateStuff(this.stuffId, {name: this.stuffName, 
+      this.stuffService.updateStuff(this.selectedStuff.id, {name: this.stuffName, 
                                                   labelId: this.labelId,
                                                   userId: this.currentUserId,
                                                   shelfId: this.shelfId,
                                                   isAvailable: true}).subscribe(
         (response: any) => {
-          console.log('Shelf updated successfully!', response);
+          this.ngOnInit();
+          this.getAllStuffs();
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
+
+    updateLabel() {
+      this.labelService.updateLabel(this.labelId, {description: this.selectedStuff.label!.description,
+        texture: this.selectedStuff.label!.texture,
+        color: this.selectedStuff.label!.color,
+        size: this.selectedStuff.label!.size,
+        price: this.selectedStuff.label!.price,
+        brand: this.selectedStuff.label!.brand}).subscribe(
+        (response: any) => {
           this.ngOnInit();
           this.getAllStuffs();
         },
@@ -149,7 +178,17 @@ export class StuffComponent implements OnInit {
   deleteStuff() {
     this.stuffService.deleteStuff(this.stuffId).subscribe(
       (response: { message: string }) => {
-        console.log('Stuff deleted successfully!', response.message);
+        this.getAllStuffs();
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+
+  deleteLabel() {
+    this.labelService.deleteLabel(this.labelId).subscribe(
+      (response: { message: string }) => {
         this.getAllStuffs();
       },
       (error: any) => {
@@ -166,90 +205,18 @@ export class StuffComponent implements OnInit {
 setStuffId(stuff: Stuff){
     this.selectedStuff = stuff;
     this.stuffId = this.selectedStuff?.id ?? 0;
-    this.labelId = this.selectedStuff?.id ?? 0;
+    this.labelId = this.selectedStuff?.labelId ?? 0;
     this.stuffName = this.selectedStuff?.name ?? "";
     this.userId = this.selectedStuff?.user?.id ?? 0;
     this.shelfId = this.selectedStuff?.shelf?.id ?? 0;
-    console.log(this.selectedStuff);
-}
-getAllLabels() {
-  this.labelService.getAllLabels().subscribe(
-    (data: { labels: Label[] }) => {
-      this.labels = data.labels;
-      console.log(this.labels);
-    },
-    (error: any) => {
-      console.error(error);
-    }
-  );
-}
-
-createLabel() {
-  const newLabel: Label = {
-    id: 0,
-    description: 'Example Description',
-    texture: 'Example Texture',
-    color: 'Example Color',
-    size: 'Example Size',
-    price: 0,
-    brand: 'Example Brand',
-    name: ''
-  };
-
-  this.labelService.createLabel(newLabel).subscribe(
-    (response: { label: Label }) => {
-      console.log('Label created successfully!', response.label);
-      this.getAllLabels();
-    },
-    (error: any) => {
-      console.error(error);
-    }
-  );
-}
-
-updateLabel(label: Label) {
-  const updatedLabel: Label = {
-    id: label.id,
-    description: 'Updated Description',
-    texture: 'Updated Texture',
-    color: 'Updated Color',
-    size: 'Updated Size',
-    price: label.price,
-    brand: 'Updated Brand',
-    name: ''
-  };
-
-  this.labelService.updateLabel(updatedLabel.id, updatedLabel).subscribe(
-    (response: { message: string }) => {
-      console.log('Label updated successfully!', response.message);
-      this.getAllLabels();
-    },
-    (error: any) => {
-      console.error(error);
-    }
-  );
-}
-
-deleteLabel(label: Label) {
-  this.labelService.deleteLabel(label.id).subscribe(
-    (response: { message: string }) => {
-      console.log('Label deleted successfully!', response.message);
-      this.getAllLabels();
-    },
-    (error: any) => {
-      console.error(error);
-    }
-  );
 }
   shelves?:Shelf[]
   selectedShelvesId!: number;
   selectedStuff!: Stuff;
-  shelvesForm = new FormControl();
-  shelvesForm_upd = new FormControl();
+  stuffForm = new FormControl();
   labelForm = new FormControl();
   newStuffName!: string;
-
-  
+  labels?: Label[];
   stuffId: number = this.selectedStuff?.id ?? 0;
   labelId: number = this.selectedStuff?.id ?? 0;
   stuffName: string = this.selectedStuff?.name ?? '';

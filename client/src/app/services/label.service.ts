@@ -11,22 +11,22 @@ export class LabelService {
   constructor(private http: HttpClient) {}
 
   getAllLabels(): Observable<any> {
-    const url = `${this.apiUrl}/label`;
+    const url = `${this.apiUrl}/`;
     return this.http.get(url);
   }
 
   createLabel(label: any): Observable<any> {
-    const url = `${this.apiUrl}/label`;
+    const url = `${this.apiUrl}/`;
     return this.http.post(url, label);
   }
 
   updateLabel(id: number, label: any): Observable<any> {
-    const url = `${this.apiUrl}/label/${id}`;
+    const url = `${this.apiUrl}/${id}`;
     return this.http.put(url, label);
   }
 
   deleteLabel(id: number): Observable<any> {
-    const url = `${this.apiUrl}/label/${id}`;
+    const url = `${this.apiUrl}/${id}`;
     return this.http.delete(url);
   }
 }

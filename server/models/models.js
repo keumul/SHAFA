@@ -26,24 +26,14 @@ const Shelves = sequelize.define('shelves', {
 });
 
 const Outfits = sequelize.define('outfits', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: DataTypes.STRING, allowNull: false }
 });
 
 const Stuffs = sequelize.define('stuffs', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, allowNull: false },
   isAvailable: { type: DataTypes.BOOLEAN, allowNull: false }
-});
-
-const ReservedOutfits = sequelize.define('reservedOutfits', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.STRING, allowNull: false }
-});
-
-const UsersStuffs = sequelize.define('usersStuffs', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false }
 });
 
 const Labels = sequelize.define('labels', {
@@ -56,79 +46,55 @@ const Labels = sequelize.define('labels', {
   brand: { type: DataTypes.STRING, allowNull: false }
 });
 
-const ReservedStuffs = sequelize.define('reservedStuffs', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false }
-});
 
-const UsersOutfits = sequelize.define('usersOutfits', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false },
-  description: { type: DataTypes.STRING, allowNull: false }
-});
-
-const StuffsInOutfits = sequelize.define('stuffsInOutfits', {
+const OutfitStuff = sequelize.define('outfitStuff', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 });
 
-const UsersInShelves = sequelize.define('usersInShelves', {
+const SharedAccess = sequelize.define('sharedAccess', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 });
 
-StuffsInOutfits.belongsTo(Outfits);
-Outfits.hasOne(StuffsInOutfits);
+Labels.hasOne(Stuffs);
+Stuffs.belongsTo(Labels);
 
-StuffsInOutfits.belongsTo(Stuffs);
-Stuffs.hasMany(StuffsInOutfits);
-
-UsersInShelves.belongsTo(Users);
-Users.hasMany(UsersInShelves);
-
-UsersInShelves.belongsTo(Shelves);
-Shelves.hasOne(UsersInShelves);
-
-ReservedStuffs.hasMany(Stuffs);
-Stuffs.belongsTo(ReservedStuffs);
-
-// Stuffs and Labels
-Labels.belongsTo(Stuffs);
-Stuffs.hasOne(Labels);
-
-// Stuffs and Users
 Stuffs.belongsTo(Users);
 Users.hasMany(Stuffs);
 
-// Stuffs and Shelves
+Outfits.belongsTo(Users);
+Users.hasMany(Outfits);
+
 Stuffs.belongsTo(Shelves);
 Shelves.hasMany(Stuffs);
 
-// Users and Roles
 Users.belongsTo(Roles);
 Roles.hasMany(Users);
 
-// Shelves and Users
 Shelves.belongsTo(Users);
 Users.hasMany(Shelves);
 
-// Shelves and Categories
 Shelves.belongsTo(Categories);
 Categories.hasMany(Shelves);
 
-// Outfits and Stuffs
-Stuffs.belongsTo(Outfits);
-Outfits.hasOne(Stuffs);
+Outfits.belongsToMany(Stuffs, { through: OutfitStuff, foreignKey: 'outfitId' });
+Stuffs.belongsToMany(Outfits, { through: OutfitStuff, foreignKey: 'stuffId' });
 
-// ReservedOutfits and Outfits
-ReservedOutfits.belongsTo(Outfits);
-Outfits.hasOne(ReservedOutfits);
+Shelves.belongsToMany(Users, {
+  through: SharedAccess,
+  foreignKey: 'shelfId',
+  otherKey: 'userId',
+  as: 'Users',
+});
 
-// UsersStuff and Stuffs
-UsersStuffs.belongsTo(Stuffs);
-Stuffs.hasOne(UsersStuffs);
-
-// UsersOutfits and Outfits
-UsersOutfits.belongsTo(Outfits);
-Outfits.hasOne(UsersOutfits);
+Users.belongsToMany(Shelves, {
+  through: SharedAccess,
+  foreignKey: 'userId',
+  otherKey: 'shelfId',
+  as: 'Shelves',
+});
+Shelves.hasMany(SharedAccess, { foreignKey: 'shelfId' });
+SharedAccess.belongsTo(Shelves, { foreignKey: 'shelfId' });
+SharedAccess.belongsTo(Users, { foreignKey: 'userId' });
 
 module.exports = {
             Categories, 
@@ -137,11 +103,7 @@ module.exports = {
             Shelves, 
             Outfits, 
             Stuffs, 
-            Labels, 
-            UsersStuffs, 
-            UsersOutfits, 
-            ReservedOutfits, 
-            ReservedStuffs, 
-            StuffsInOutfits,
-            UsersInShelves
+            Labels,
+            OutfitStuff,
+            SharedAccess
           };
