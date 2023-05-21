@@ -101,9 +101,11 @@ label{
   .message-username {
     font-weight: bold;
     color: rgb(68, 127, 170);
-
   }
-  
+  .message-username-admin {
+    font-weight: bold;
+    color: rgb(70, 46, 179);
+  }
   .message-text {
     margin-top: 5px;
   }

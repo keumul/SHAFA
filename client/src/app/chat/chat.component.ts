@@ -16,10 +16,11 @@ export class ChatComponent implements OnInit {
   newMessage!: string;
   logout_user: boolean = false;
   ngOnInit() {
+    const unique_nums = Math.random() * 200000
     this.currentUser = this.authService.getCurrentUserId()
-    if (!this.currentUser?.email || this.currentUser?.roleId == 1){
+    if (!this.currentUser?.email){
       this.logout_user = true;
-      this.currentUser = {email: 'shafa_user'}
+      this.currentUser = {email: 'shafa_user'+unique_nums.toFixed(0)}
     } else {this.logout_user = false;}
     this.socket = io('http://localhost:3001', {
       transports: ['websocket'],
@@ -51,8 +52,8 @@ export class ChatComponent implements OnInit {
     
   }
 
-  sendMessage(username:string, message: string) {
-    this.socket.emit('message', {username: username, message: message});
+  sendMessage(email:string, message: string) {
+    this.socket.emit('message', {email: email, message: message});
   }
 
   currentUser: any;

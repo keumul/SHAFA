@@ -13,7 +13,7 @@ const generateJwt = (id, email, roleId) => {
 
 class UserController {
     async registration(req, res, next) {
-          const { userName, email, password, pronounces, roleId } = req.body;
+          const { userName, email, password, roleId } = req.body;
       
           const existingUser = await Users.findOne({ where: { email } });
           if (existingUser) {
@@ -26,8 +26,6 @@ class UserController {
             userName,
             email,
             passwordHash: hashedPassword,
-            isEmailConfirmed: false,
-            pronounces,
             roleId
           });
           const token = generateJwt(newUser.id, newUser.email, newUser.roleId)

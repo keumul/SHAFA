@@ -14,8 +14,8 @@ async getAllLabels(req, res) {
   
 async createLabel(req, res){
     try {
-      const { description, texture, color, size, price, brand } = req.body;
-      const newLabel = await Labels.create({ description, texture, color, size, price, brand });
+      const { description, texture, color, size, brand } = req.body;
+      const newLabel = await Labels.create({ description, texture, color, size, brand });
       res.status(201).json({ label: newLabel });
     } catch (error) {
       console.error(error);
@@ -26,9 +26,9 @@ async createLabel(req, res){
 async updateLabel(req, res) {
     try {
       const { id } = req.params;
-      const { description, texture, color, size, price, brand } = req.body;
+      const { description, texture, color, size, brand } = req.body;
       const [numRowsAffected] = await Labels.update(
-        { description, texture, color, size, price, brand },
+        { description, texture, color, size, brand },
         { where: { id } }
       );
   

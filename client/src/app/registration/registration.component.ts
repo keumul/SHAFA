@@ -19,7 +19,6 @@ export class RegistrationComponent implements OnInit {
     userName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    pronounces: ['', Validators.required],
     roleId: ['', Validators.required]
   });
 
@@ -30,7 +29,6 @@ export class RegistrationComponent implements OnInit {
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      pronounces: ['', Validators.required],
       roleId: ['', Validators.required]
     });
   }

@@ -3,6 +3,7 @@ const express = require('express')
 const sequelize = require('./models/database')
 const models = require('./models/models')
 const cors = require('cors')
+const img = require('express-fileupload')
 const router = require('./routes/routes')
 const errorHandler = require('./middleware/errorHandlingMiddleware')
 const PORT = process.env.PORT || 3000
@@ -13,12 +14,11 @@ const fs = require('fs')
 const app = express()
 app.use(cors())
 app.use(express.json())
+app.use(img)
 app.use('/api', router)
 
 const server = https.createServer(app);
 const io = socketIO(server);
-
-
 
 io.on('connection', (socket) => {
   console.log('Socket.IO connected');

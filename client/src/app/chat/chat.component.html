@@ -19,10 +19,13 @@
     <div class="message" #messageContainer>
       <div *ngFor="let message of messages; let i = index">
         <div>
-          <span class="message-username">{{message.username}}</span>: 
-          {{message.message}}
+          <span class="message-username-admin" *ngIf="message.email === 'admin@gmail.com'">
+            ADMIN</span><span class="message-username" *ngIf="message.email !== 'admin@gmail.com'">
+            {{message.email}}</span>: 
+            {{message.message}}
         </div>
       </div>
     </div>
   </mat-card>
+  
 </div>

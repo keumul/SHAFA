@@ -3,9 +3,28 @@
         <mat-card>
             <div class="form-row">
                 <button (click)="getAllShelves()" class="custom-btn btn-11">Shelves</button>
-                <button (click)="getAllStuffs()" class="custom-btn btn-11">Stuffs</button>
+                <!-- <button (click)="getAllStuffs()" class="custom-btn btn-11">Stuffs</button> -->
             </div>
+            <div class="category-stats">
+                <h3>Category Statistics</h3>
+                <table>
+                  <tr>
+                    <th>Category</th>
+                    <th>Outfit</th>
+                    <th>Stuff</th>
+                    <th>Shelf</th>
+                  </tr>
+                  <tr *ngFor="let categoryStat of categoryStats">
+                    <td>{{ categoryStat.category.name }}</td>
+                    <td>{{ categoryStat.outfitCount }}</td>
+                    <td>{{ categoryStat.stuffCount }}</td>
+                    <td>{{ categoryStat.shelfCount }}</td>
+                  </tr>
+                </table>
+              </div>
+              
         </mat-card>
+
     </div>
 
     <div class="json-view">
@@ -21,7 +40,7 @@
                     </button>
                 </div>
             </div>
-            <div *ngIf="whatisopen === 'stuffs'">
+            <!-- <div *ngIf="whatisopen === 'stuffs'"> -->
                 <div *ngFor="let stuff of stuffs">
                     <button matRipple class="btn-list">
                         <div class="server-response">
@@ -32,7 +51,7 @@
                         </div>
                     </button>
                 </div>
-            </div>
+            <!-- </div> -->
         </mat-card>
     </div>
 </div>

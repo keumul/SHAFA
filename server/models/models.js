@@ -10,9 +10,7 @@ const Users = sequelize.define('users', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   userName: { type: DataTypes.STRING, allowNull: false },
   email: { type: DataTypes.STRING, allowNull: false, unique: true },
-  isEmailConfirmed: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-  passwordHash: { type: DataTypes.STRING, allowNull: false },
-  pronounces: { type: DataTypes.STRING, allowNull: false }
+  passwordHash: { type: DataTypes.STRING, allowNull: false }
 });
 
 const Roles = sequelize.define('roles', {
@@ -33,7 +31,7 @@ const Outfits = sequelize.define('outfits', {
 const Stuffs = sequelize.define('stuffs', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, allowNull: false },
-  isAvailable: { type: DataTypes.BOOLEAN, allowNull: false }
+  img: {type: DataTypes.STRING, allowNull: false}
 });
 
 const Labels = sequelize.define('labels', {
@@ -42,7 +40,6 @@ const Labels = sequelize.define('labels', {
   texture: { type: DataTypes.STRING, allowNull: false },
   color: { type: DataTypes.STRING, allowNull: false },
   size: { type: DataTypes.STRING, allowNull: false },
-  price: { type: DataTypes.DECIMAL(10,2), allowNull: false },
   brand: { type: DataTypes.STRING, allowNull: false }
 });
 

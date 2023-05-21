@@ -1,3 +1,4 @@
+
 <mat-toolbar>
   <span class="text-logo">Your personal Shafa ☆</span>
   <span class="example-spacer"></span>
@@ -6,19 +7,53 @@
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>  
+<div class="container">
+  <div class="tab-container">
+    <mat-tab-group class="tab-group">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="full-width-label">Shafa</span>
+        </ng-template>
+        <app-shafa></app-shafa>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="full-width-label">Users</span>
+        </ng-template>
+        <app-user></app-user>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <span class="full-width-label">Shafa</span>
-      </ng-template>
-      <app-shafa></app-shafa>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <span class="full-width-label">Users</span>
-      </ng-template>
-      <app-user></app-user>
-    </mat-tab>
-  </mat-tab-group>
+  <div class="chat-container">
+    <mat-card class="matInput">
+      <div class="input-form">
+        <mat-form-field>
+          <input matInput type="text" [(ngModel)]="newMessage" placeholder="Send something">
+        </mat-form-field>      
+        <div class="button-list">
+        <button mat-icon-button (click)="sendMessage(currentUser.email, newMessage)" class="btn-11">
+          Send
+        </button>
+        </div>
+      </div>
+    </mat-card>
   
+    <mat-card class="message-card">
+      <div class="message" #messageContainer>
+        <div *ngFor="let message of messages; let i = index">
+          <div>
+            <span class="message-username-admin" *ngIf="message.email === 'admin@gmail.com'">
+              ADMIN</span><span class="message-username" *ngIf="message.email !== 'admin@gmail.com'">
+              {{message.email}}</span>: 
+              {{message.message}}
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  <div class="chart-container">
+    <canvas id="userStatsChart"></canvas>
+  </div>
+  </div>
+
+</div>

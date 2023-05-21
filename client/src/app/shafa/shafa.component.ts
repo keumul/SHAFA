@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ShafaService } from '../services/shafa.service';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../services/user.service';
+import { ShelfService } from '../services/shelf.service';
 
 interface Stuff {
   id: number;
@@ -9,7 +11,7 @@ interface Stuff {
   user: User;
   shelf: Shelf;
   label?: Label;
-  userId: number;
+  userId: User;
   shelfId: number;
   isAvailable: boolean;
 }
@@ -49,6 +51,13 @@ interface Outfit {
   userId: User;
 }
 
+interface CategoryStats {
+  category: Category;
+  outfitCount: number;
+  stuffCount: number;
+  shelfCount: number;
+}
+
 @Component({
   selector: 'app-shafa',
   templateUrl: './shafa.component.html',
@@ -60,46 +69,104 @@ export class ShafaComponent {
   stuffs: Stuff[] = [];
   users?: User[] = [];
   whatisopen: string = '';
-
+  categoryStats: CategoryStats[] = [];
+  categories: Category[] = [];
+  
   constructor(
     private shafaService: ShafaService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private userService: UserService,
+    private shelfService: ShelfService
   ) {}
 
   ngOnInit(): void {
+    this.getUsers();
+    this.loadCategories();
     this.getAllShelves();
-    this.getAllStuffs();
+    //this.getAllStuffs();
   }
 
   getOutfits(): void {
     
   }
 
-  getAllShelves(): void {
-    this.whatisopen = 'shelves';
-    this.shafaService.getAllShelves()
+  getAllShelves() {
+    this.shafaService.getAllShelves().subscribe(
+      (data: Shelf[]) => {
+        this.shelves = data.map((shelf: Shelf) => ({
+          ...shelf,
+        }));
+        console.log(this.shelves);
+        this.calculateCategoryStats();
+      },
+      (error: any) => {
+        console.error(error);
+      }
+    );
+  }
+  getUsers(): void {
+    this.userService.getUsers()
       .subscribe(
-        (response) => {
-          this.shelves = response;
+        response => {
+          this.users = Object.values(response.user);
+          console.log(this.users);
           
         },
-        (error) => {
-          this.toastr.error('An error occurred while retrieving shelves.', 'Error');
+        error => {
+          console.error(error);
+          // Handle error
         }
       );
   }
 
-  getAllStuffs(): void {
-    this.whatisopen = 'stuffs';
-    this.shafaService.getAllStuffs()
-      .subscribe(
-        (response) => {
-          this.stuffs = response.stuffs;
-          console.log(this.whatisopen, this.stuffs);
-        },
-        (error) => {
-          this.toastr.error('An error occurred while retrieving stuffs.', 'Error');
-        }
-      );
+  loadCategories(): void {
+    this.shelfService.getAllCategories().subscribe(
+      (data: Category[]) => {
+        this.categories = data;
+      },
+      (error) => {
+        console.error(error);
+        // Обработка ошибки
+      }
+    );
   }
+
+  // getAllStuffs(): void {
+  //   this.whatisopen = 'stuffs';
+  //   this.shafaService.getAllStuffs()
+  //     .subscribe(
+  //       (response) => {
+  //         this.stuffs = response.stuffs;
+  //       },
+  //       (error) => {
+  //         this.toastr.error('An error occurred while retrieving stuffs.', 'Error');
+  //       }
+  //     );
+  // }
+  calculateCategoryStats(): void {
+    console.log('IM HERE 1!!!!!!!!!!')
+    const categoryStatsMap = this.shelves.reduce((map, shelf) => {
+      console.log('IM HERE 2!!!!!!!!!!')
+      if (shelf.category && shelf.category.id) {
+        const categoryId = shelf.category.id;
+        console.log('IM HERE 3!!!!!!!!!!')
+        if (map.has(categoryId)) {
+          const categoryStats = map.get(categoryId)!;
+          categoryStats.shelfCount++;
+        } else {
+          console.log('IM HERE 4!!!!!!!!!!')
+          const categoryStats: CategoryStats = {
+            category: shelf.category,
+            outfitCount: 0,
+            stuffCount: 0,
+            shelfCount: 1,
+          };
+          map.set(categoryId, categoryStats);
+        }
+      }         console.log('IM HERE 5!!!!!!!!!!')
+      return map;
+    }, new Map<number, CategoryStats>());
+    this.categoryStats = Array.from(categoryStatsMap.values());
+  }
+  
 }

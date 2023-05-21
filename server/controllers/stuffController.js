@@ -1,6 +1,5 @@
-const Error = require('../errors/error');
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const uuid = require('uuid')
+const path = require('path')
 const { Stuffs, Users, Shelves, Labels, StuffsInOutfits, Outfits } = require('../models/models')
 
 class StuffController {
@@ -68,8 +67,12 @@ async getAllStuffs(req, res) {
 
   async createStuff(req, res) {
     try {
-      const { name, labelId, userId, shelfId, isAvailable } = req.body;
-      const newStuff = await Stuffs.create({ name, labelId, userId, shelfId, isAvailable });
+      const { name, labelId, userId, shelfId } = req.body;
+      const { img } = req.files;
+      let filename = uuid.v4() + '.jpg';
+      img.mv(path.resolve(__dirname, '..', 'static', filename));
+
+      const newStuff = await Stuffs.create({ name, labelId, userId, shelfId, img: filename });
       res.status(201).json({ stuff: newStuff });
     } catch (error) {
       console.error(error);

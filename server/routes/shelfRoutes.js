@@ -6,7 +6,7 @@ const checkRole = require('../middleware/checkRoleMiddleware')
 router.get('/admin', checkRole(1), shelfController.getAllShelvesAdmin);
 router.get('/admin/:id', checkRole(1), shelfController.getShelfById);
 
-router.get('/categ', checkRole(2), shelfController.getAllCategories);
+router.get('/categ', shelfController.getAllCategories);
 router.get('/:id', checkRole(2), shelfController.getAllShelves);
 
 router.get('/access/:shelfId', checkRole(2), shelfController.addUserToShelf);
