@@ -10,11 +10,13 @@ const PORT = process.env.PORT || 3000
 const https = require('http');
 const socketIO = require('socket.io');
 const fs = require('fs')
+const path = require('path')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(img)
+app.use(express.static(path.resolve(__dirname,'static')))
+app.use(img())
 app.use('/api', router)
 
 const server = https.createServer(app);

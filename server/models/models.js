@@ -76,6 +76,9 @@ Categories.hasMany(Shelves);
 Outfits.belongsToMany(Stuffs, { through: OutfitStuff, foreignKey: 'outfitId' });
 Stuffs.belongsToMany(Outfits, { through: OutfitStuff, foreignKey: 'stuffId' });
 
+OutfitStuff.belongsTo(Stuffs, { foreignKey: 'stuffId' });
+OutfitStuff.belongsTo(Outfits, { foreignKey: 'outfitId' });
+
 Shelves.belongsToMany(Users, {
   through: SharedAccess,
   foreignKey: 'shelfId',

@@ -29,6 +29,7 @@ class UserController {
             roleId
           });
           const token = generateJwt(newUser.id, newUser.email, newUser.roleId)
+          console.log(token);
           res.status(201).json({ token: `${token}` });
       }
       

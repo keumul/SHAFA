@@ -6,36 +6,45 @@
         <input matInput type="text" [(ngModel)]="outfitName" placeholder="Name">
         <mat-select [formControl]="outfitsForm" multiple placeholder="Stuffs" [(ngModel)]="selectedStuffIds">
           <mat-select-trigger>
-            {{outfitsForm.value?.[0] || ''}}
+            {{ outfitsForm.value?.[0] || '' }}
             <span *ngIf="(outfitsForm.value?.length || 0) > 1" class="example-additional-selection">
-              (+{{(outfitsForm.value?.length || 0) - 1}} {{outfitsForm.value?.length === 2 ? 'other' : 'others'}})
+              (+{{ (outfitsForm.value?.length || 0) - 1 }} {{ outfitsForm.value?.length === 2 ? 'other' : 'others' }})
             </span>
           </mat-select-trigger>
-          <mat-option *ngFor="let outfitStuff of stuffs" [value]="outfitStuff.id">
-            {{outfitStuff.name}}
+          <mat-option *ngFor="let stuff of stuffs" [value]="stuff.id">
+            {{ stuff.name }}
           </mat-option>
         </mat-select>
         <button (click)="createOutfit()" class="custom-btn btn-11">Create</button>
         <!-- <button (click)="updateOutfit()" class="custom-btn btn-11">Edit</button> -->
-        <button (click)="deleteOutfit()" class="custom-btn btn-11">Delete</button>
+        <!-- <button (click)="deleteOutfit()" class="custom-btn btn-11">Delete</button> -->
       </div>
     </mat-card>
   </div>
   <div class="json-view">
     <mat-card class="scrollable-card">
       <div *ngFor="let outfit of outfits">
-        <button matRipple class="btn-list" (click)="showOutfitStuff(outfit)">
+        <!-- (click)="showOutfitStuff(outfit)" -->
+        <button matRipple class="btn-list" >
           <div class="server-response">
             <mat-card-title>{{ outfit.name }}</mat-card-title>
             <mat-card-subtitle>
-              Stuffs:
-              <div *ngFor="let stuffName of outfit.stuffs">
-                {{ stuffName.name }}
-              </div>
+              <!-- <div *ngFor="let stuff of outfit.stuffs">
+                {{ stuff.name }}
+                <img [src]="'http://localhost:3000/' + stuff.stuffId.img">
+              </div> -->
+              <!-- <div *ngFor="let outfit of outfits"> -->
+                  <div *ngFor="let stuff of getOutfitStuff(outfit)">
+                    <p>{{ stuff.name }}</p>
+                    <img [src]="'http://localhost:3000/' + stuff.img" alt="Stuff Image">
+                  </div>          
+                
+              <!-- </div> -->
             </mat-card-subtitle>
           </div>
         </button>
       </div>
     </mat-card>
   </div>
+  
 </div>

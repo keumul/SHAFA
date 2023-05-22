@@ -10,29 +10,30 @@
             {{ shelf.name }}
           </mat-option>
         </mat-select>
-        <button (click)="createStuff()" class="custom-btn btn-11">Create</button>
+        <input type="file" (change)="onFileSelected($event)">
+        <button (click)="createStuff(selectedStuff)" class="custom-btn btn-11">Create</button>
         <button (click)="updateStuff()" class="custom-btn btn-11">Edit</button>
         <button (click)="deleteStuff()" class="custom-btn btn-11">Delete</button>
-        </div>
-        <div class="label-editor" *ngIf="selectedStuff?.label">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.description" placeholder="Description">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.texture" placeholder="Texture">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.color" placeholder="Color">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.size" placeholder="Size">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.price" placeholder="Price">
-          <input matInput type="text" [(ngModel)]="selectedStuff.label!.brand" placeholder="Brand">
-          <button (click)="updateLabel()" class="custom-btn btn-11">Update</button>
-          <button (click)="deleteLabel()" class="custom-btn btn-11">Delete</button>
-        </div>
-        <div class="label-editor" *ngIf="!selectedStuff?.label" >
-          <input matInput type="text" [(ngModel)]="newLDescription" placeholder="Description">
-          <input matInput type="text" [(ngModel)]="newTexture" placeholder="Texture">
-          <input matInput type="text" [(ngModel)]="newColor" placeholder="Color">
-          <input matInput type="text" [(ngModel)]="newSize" placeholder="Size">
-          <input matInput type="text" [(ngModel)]="newPrice" placeholder="Price">
-          <input matInput type="text" [(ngModel)]="newBrand" placeholder="Brand">
-          <button (click)="createLabel()" class="custom-btn btn-11">Create</button>
-        </div>
+      </div>
+      <div class="label-editor" *ngIf="selectedStuff?.label">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.description" placeholder="Description">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.texture" placeholder="Texture">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.color" placeholder="Color">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.size" placeholder="Size">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.price" placeholder="Price">
+        <input matInput type="text" [(ngModel)]="selectedStuff.label!.brand" placeholder="Brand">
+        <button (click)="updateLabel()" class="custom-btn btn-11">Update</button>
+        <button (click)="deleteLabel()" class="custom-btn btn-11">Delete</button>
+      </div>
+      <div class="label-editor" *ngIf="!selectedStuff?.label">
+        <input matInput type="text" [(ngModel)]="newLDescription" placeholder="Description">
+        <input matInput type="text" [(ngModel)]="newTexture" placeholder="Texture">
+        <input matInput type="text" [(ngModel)]="newColor" placeholder="Color">
+        <input matInput type="text" [(ngModel)]="newSize" placeholder="Size">
+        <input matInput type="text" [(ngModel)]="newPrice" placeholder="Price">
+        <input matInput type="text" [(ngModel)]="newBrand" placeholder="Brand">
+        <button (click)="createLabel()" class="custom-btn btn-11">Create</button>
+      </div>
     </mat-card>
   </div>
 
@@ -44,13 +45,14 @@
                                       {{stuff.label?.color}}
                                       {{stuff.label?.size}}
                                       {{stuff.label?.price}}
-                                      {{stuff.label?.brand}}" 
-                                      class="btn-list" (click)="setStuffId(stuff)" >
+                                      {{stuff.label?.brand}}" class="btn-list" (click)="setStuffId(stuff)">
           <div class="server-response">
             <mat-card-title>{{ stuff.name }}</mat-card-title>
             <mat-card-subtitle>Owner: {{ stuff.user.userName }}</mat-card-subtitle>
             <mat-card-subtitle>Shelf: {{ stuff.shelf.name }}</mat-card-subtitle>
-
+            <div *ngIf="stuff.img">
+              <img [src]="'http://localhost:3000/' + stuff.img">
+            </div>
           </div>
         </button>
       </div>

@@ -1,6 +1,6 @@
 const uuid = require('uuid')
 const path = require('path')
-const { Stuffs, Users, Shelves, Labels, StuffsInOutfits, Outfits } = require('../models/models')
+const { Stuffs, Users, Shelves, Labels, Outfits, OutfitStuff } = require('../models/models')
 
 class StuffController {
 async getAllStuffs(req, res) {
@@ -46,7 +46,7 @@ async getAllStuffs(req, res) {
   async getStuffByOutfit(req, res){
     const { outfit_id } = req.params;
     try {
-      const stuffs = await StuffsInOutfits.findAll(
+      const stuffs = await OutfitStuff.findAll(
         {
           include: [
             {model: Stuffs},
@@ -94,12 +94,20 @@ async getAllStuffs(req, res) {
     }
   };
   
- async updateStuff(req, res) {
+  async updateStuff(req, res) {
     try {
       const { id } = req.params;
-      const { name, labelId, userId, shelfId, isAvailable } = req.body;
+      const { name, labelId, userId, shelfId} = req.body;
+      const selectedFile = req.files?.img;
+      let img;
+  
+      if (selectedFile) {
+        img = uuid.v4() + '.jpg';
+        selectedFile.mv(path.resolve(__dirname, '..', 'static', img));
+      }
+  
       const [numRowsAffected] = await Stuffs.update(
-        { name, labelId, userId, shelfId, isAvailable },
+        { name, labelId, userId, shelfId, img },
         { where: { id } }
       );
   
@@ -113,6 +121,7 @@ async getAllStuffs(req, res) {
       res.status(500).json({ error: 'ERROR: Something went wrong while updating stuff!' });
     }
   };
+  
   
   async deleteStuff(req, res) {
     try {

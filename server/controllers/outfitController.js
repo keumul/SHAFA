@@ -30,11 +30,11 @@ async getOutfitsByUser(req, res) {
       include: [
         {
           model: Stuffs,
-          attributes: ['id', 'name'],
+          attributes: ['id', 'name', 'img'],
           through: { attributes: [] },
         },
       ],
-      group: ['outfits.id', 'outfits.name', 'stuffs.id', 'stuffs.name'], 
+      group: ['outfits.id', 'outfits.name', 'stuffs.id', 'stuffs.name', 'stuffs.img'], 
     });
     if (!uniqueOutfits) {
       return res.status(404).json({ error: 'ERROR: Outfit not found!' });
