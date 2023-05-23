@@ -8,6 +8,7 @@
         <mat-select [formControl]="stuffForm" placeholder="Shelves" [(ngModel)]="shelfId">
           <mat-option *ngFor="let shelf of shelves" [value]="shelf.id">
             {{ shelf.name }}
+            ({{ shelf.category.name }})
           </mat-option>
         </mat-select>
         <input type="file" (change)="onFileSelected($event)">
@@ -39,22 +40,23 @@
 
   <div class="json-view">
     <mat-card class="scrollable-card">
-      <div *ngFor="let stuff of stuffs">
-        <button matRipple matTooltip="{{stuff.label?.description}}
-                                      {{stuff.label?.texture}}
-                                      {{stuff.label?.color}}
-                                      {{stuff.label?.size}}
-                                      {{stuff.label?.price}}
-                                      {{stuff.label?.brand}}" class="btn-list" (click)="setStuffId(stuff)">
-          <div class="server-response">
-            <mat-card-title>{{ stuff.name }}</mat-card-title>
-            <mat-card-subtitle>Owner: {{ stuff.user.userName }}</mat-card-subtitle>
-            <mat-card-subtitle>Shelf: {{ stuff.shelf.name }}</mat-card-subtitle>
+      <div class="button-matrix">
+        <div *ngFor="let stuff of stuffs" class="button-row">
+          <button matRipple matTooltip="
+    Stuff: {{ stuff.name }} ★︎ 
+    Owner: {{ stuff.user.userName }} ★︎ 
+    {{stuff.label?.description}}
+    Shelf: {{ stuff.shelf.name }} ★︎ 
+    {{stuff.label?.texture}}
+    {{stuff.label?.color}}
+    {{stuff.label?.size}}
+    {{stuff.label?.price}}
+    {{stuff.label?.brand}}" class="btn-list" (click)="setStuffId(stuff)">
             <div *ngIf="stuff.img">
               <img [src]="'http://localhost:3000/' + stuff.img">
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
       </div>
     </mat-card>
   </div>

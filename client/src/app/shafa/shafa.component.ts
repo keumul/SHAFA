@@ -42,7 +42,12 @@ interface User {
 interface Category {
   id: number;
   name: string;
+  shelfCount?: number;
+  outfitCount?: number;
+  labelCount?: number;
+  voteCount?: number;
 }
+
 
 interface Outfit {
   id: number;
@@ -83,7 +88,7 @@ export class ShafaComponent {
     this.getUsers();
     this.loadCategories();
     this.getAllShelves();
-    //this.getAllStuffs();
+    this.getAllStuffs();
   }
 
   getOutfits(): void {
@@ -96,21 +101,18 @@ export class ShafaComponent {
         this.shelves = data.map((shelf: Shelf) => ({
           ...shelf,
         }));
-        console.log(this.shelves);
-        this.calculateCategoryStats();
       },
       (error: any) => {
         console.error(error);
       }
     );
   }
+  
   getUsers(): void {
     this.userService.getUsers()
       .subscribe(
         response => {
           this.users = Object.values(response.user);
-          console.log(this.users);
-          
         },
         error => {
           console.error(error);
@@ -131,42 +133,17 @@ export class ShafaComponent {
     );
   }
 
-  // getAllStuffs(): void {
-  //   this.whatisopen = 'stuffs';
-  //   this.shafaService.getAllStuffs()
-  //     .subscribe(
-  //       (response) => {
-  //         this.stuffs = response.stuffs;
-  //       },
-  //       (error) => {
-  //         this.toastr.error('An error occurred while retrieving stuffs.', 'Error');
-  //       }
-  //     );
-  // }
-  calculateCategoryStats(): void {
-    console.log('IM HERE 1!!!!!!!!!!')
-    const categoryStatsMap = this.shelves.reduce((map, shelf) => {
-      console.log('IM HERE 2!!!!!!!!!!')
-      if (shelf.category && shelf.category.id) {
-        const categoryId = shelf.category.id;
-        console.log('IM HERE 3!!!!!!!!!!')
-        if (map.has(categoryId)) {
-          const categoryStats = map.get(categoryId)!;
-          categoryStats.shelfCount++;
-        } else {
-          console.log('IM HERE 4!!!!!!!!!!')
-          const categoryStats: CategoryStats = {
-            category: shelf.category,
-            outfitCount: 0,
-            stuffCount: 0,
-            shelfCount: 1,
-          };
-          map.set(categoryId, categoryStats);
+  getAllStuffs(): void {
+    this.whatisopen = 'stuffs';
+    this.shafaService.getAllStuffs()
+      .subscribe(
+        (response) => {
+          this.stuffs = response.stuffs;
+        },
+        (error) => {
+          this.toastr.error('An error occurred while retrieving stuffs.', 'Error');
         }
-      }         console.log('IM HERE 5!!!!!!!!!!')
-      return map;
-    }, new Map<number, CategoryStats>());
-    this.categoryStats = Array.from(categoryStatsMap.values());
+      );
   }
   
 }

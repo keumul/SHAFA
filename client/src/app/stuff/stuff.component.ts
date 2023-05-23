@@ -6,6 +6,7 @@ import { ShelfService } from '../services/shelf.service';
 import { LabelService } from '../services/label.service';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CategoryScale } from 'chart.js';
 
 interface Stuff {
   id: number;
@@ -32,6 +33,12 @@ interface Label {
 interface Shelf {
   id: number
   name: string
+  category: Category;
+}
+
+interface Category {
+  id: number;
+  name: string;
 }
 
 interface User {
@@ -90,7 +97,7 @@ export class StuffComponent implements OnInit {
     }
   
     const formData = new FormData();
-    formData.append('name', stuff.name);
+    formData.append('name', this.stuffName);
     formData.append('userId', this.currentUserId.toString());
     formData.append('shelfId', this.selectedShelfId?.toString() ?? '');
     formData.append('img', stuff.selectedFile!);
@@ -123,7 +130,8 @@ export class StuffComponent implements OnInit {
     this.shelfService.getAllShelves(this.currentUserId).subscribe((data: Shelf[]) => {
       this.shelves = data.map((shelf: any) => ({
         id: shelf?.id,
-        name: shelf?.name
+        name: shelf?.name,
+        category: shelf?.category
       }));
       this.selectedShelfId = this.shelves[0]?.id;
     });
@@ -249,7 +257,7 @@ export class StuffComponent implements OnInit {
     name: '',
     labelId: 0,
     user: { id: 0, userName: '' },
-    shelf: { id: 0, name: '' },
+    shelf: { id: 0, name: '', category: {id: 0, name: ''} },
     userId: 0,
     shelfId: 0,
     img: ''

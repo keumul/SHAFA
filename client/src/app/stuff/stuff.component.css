@@ -15,8 +15,30 @@
     margin-right: 1%;
 }
 img{
-  height: 50px;
-  width: 50px;
+  height: 200px;
+  width: 200px;
+}
+.json-view .button-matrix {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.json-view .button-matrix .button-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.json-view .button-matrix .button-row button {
+  width: fit-content;
+  margin-bottom: 5px;
+  flex-shrink: 0;
+  margin-right: 10px;
+  margin-left: 20px;
 }
 
 
@@ -32,18 +54,15 @@ img{
 .json-view {
   margin-top: 7px;
   margin-right: 50%;
-
 }
 .json-view mat-card div {
   background-color: transparent;
 }
 
-
 .json-view mat-card{
   height: 450px;
   width: 1020px;
   margin-bottom: 7px;
-  
 }
 .btn-list mat-card-subtitle{
   font-family:Arial, Helvetica, sans-serif
@@ -53,12 +72,13 @@ img{
   font-size: 0.75em;
 }
 .btn-list{
-  width: 100%;
+  width: fit-content;
   color: rgb(98, 117, 194);
   font-size: small;
   background-color: transparent;
   border-color: transparent;
   cursor: pointer;
+  
   text-align: center;
   user-select: none;
   -webkit-user-select: none;
@@ -69,8 +89,8 @@ img{
 }
 
 .scrollable-card {
-  overflow-x: auto; /* Enable horizontal scrolling */
-  white-space: nowrap; /* Prevent line breaks */
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .scrollable-card::-webkit-scrollbar {
@@ -147,8 +167,7 @@ img{
       inset -4px -4px 6px 0 rgba(255,255,255,.2),
       inset 4px 4px 6px 0 rgba(0, 0, 0, .2);
   }
-  
-  
+
   @-webkit-keyframes shiny-btn1 {
       0% { -webkit-transform: scale(0) rotate(45deg); opacity: 0; }
       80% { -webkit-transform: scale(0) rotate(45deg); opacity: 0.5; }

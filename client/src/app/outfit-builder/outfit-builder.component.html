@@ -16,35 +16,28 @@
           </mat-option>
         </mat-select>
         <button (click)="createOutfit()" class="custom-btn btn-11">Create</button>
-        <!-- <button (click)="updateOutfit()" class="custom-btn btn-11">Edit</button> -->
-        <!-- <button (click)="deleteOutfit()" class="custom-btn btn-11">Delete</button> -->
+        <button (click)="deleteOutfit()" class="custom-btn btn-11">Delete</button>
+
       </div>
     </mat-card>
   </div>
   <div class="json-view">
     <mat-card class="scrollable-card">
+      <div class="button-matrix">
       <div *ngFor="let outfit of outfits">
-        <!-- (click)="showOutfitStuff(outfit)" -->
-        <button matRipple class="btn-list" >
+        <button matRipple class="btn-list" (click)="setOutfitId(outfit)">
           <div class="server-response">
             <mat-card-title>{{ outfit.name }}</mat-card-title>
             <mat-card-subtitle>
-              <!-- <div *ngFor="let stuff of outfit.stuffs">
-                {{ stuff.name }}
-                <img [src]="'http://localhost:3000/' + stuff.stuffId.img">
-              </div> -->
-              <!-- <div *ngFor="let outfit of outfits"> -->
-                  <div *ngFor="let stuff of getOutfitStuff(outfit)">
-                    <p>{{ stuff.name }}</p>
-                    <img [src]="'http://localhost:3000/' + stuff.img" alt="Stuff Image">
-                  </div>          
-                
-              <!-- </div> -->
+              <div *ngFor="let stuff of getOutfitStuff(outfit)">
+                <img matTooltip="{{ stuff.name }}" [src]="'http://localhost:3000/' + stuff.img" alt="Stuff Image">
+              </div>
             </mat-card-subtitle>
           </div>
         </button>
       </div>
+    </div>
     </mat-card>
   </div>
-  
+
 </div>

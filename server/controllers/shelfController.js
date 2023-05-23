@@ -1,4 +1,4 @@
-const { Users, Categories } = require('../models/models')
+const { Users, Categories, Stuffs } = require('../models/models')
 const { Shelves } = require('../models/models')
 const { SharedAccess } = require('../models/models');
 const { Op } = require('sequelize');
@@ -39,6 +39,7 @@ class ShelfController {
                 id: userId,
               },
             },
+            { model: Stuffs},
             { model: Categories },
           ],
         }),

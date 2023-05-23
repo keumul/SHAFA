@@ -34,11 +34,13 @@
               <h3>{{ shelf.name }}</h3>
               <p>Owner: {{ shelf.user?.userName ?? 'Not you :)' }}</p>
               <p>Category: {{ shelf.category.name }}</p>
+              <p>Stuff amount: {{ shelf.stuffs?.length ?? 0 }}</p>
             </div>
             <div *ngIf="shelf.sharedAccess">
               <h3>{{ shelf.name }}</h3>
               <p>Shared with: {{ shelf.sharedUsers?.length ?? 0 }} users</p>
               <p>Category: {{ shelf.category?.name ?? 'Unknown' }}</p>
+              <p>Stuff amount: {{ shelf.stuffs?.length ?? 0 }}</p>
             </div>
         </div>
         </button>

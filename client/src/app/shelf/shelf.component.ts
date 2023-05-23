@@ -12,6 +12,7 @@ interface Shelf {
   category: Category;
   sharedUsers: User[];
   sharedAccess: boolean;
+  stuffs: any[];
 }
 
 interface User {

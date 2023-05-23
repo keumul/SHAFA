@@ -35,6 +35,7 @@ async getOutfitsByUser(req, res) {
         },
       ],
       group: ['outfits.id', 'outfits.name', 'stuffs.id', 'stuffs.name', 'stuffs.img'], 
+      where:  {userId: id}
     });
     if (!uniqueOutfits) {
       return res.status(404).json({ error: 'ERROR: Outfit not found!' });

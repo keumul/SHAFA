@@ -8,8 +8,8 @@
     margin-bottom: 12px;
   }
   img{
-    height: 50px;
-    width: 50px;
+    height: 100px;
+    width: 100px;
   }
   .card-container {
       margin-top: 10px;
@@ -43,6 +43,28 @@
     margin-bottom: 7px;
     
   }
+
+  .json-view .button-matrix {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  
+  .json-view .button-matrix .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .json-view .button-matrix .button-row button {
+    width: fit-content;
+    margin-bottom: 5px;
+    flex-shrink: 0;
+  }
+
   .btn-list mat-card-subtitle{
     font-family:Arial, Helvetica, sans-serif
   }
@@ -59,6 +81,10 @@
     cursor: pointer;
     text-align: center;
     user-select: none;
+
+    margin-right: 60px;
+    margin-left: 60px;
+
     -webkit-user-select: none;
     -moz-user-select: none;
   
