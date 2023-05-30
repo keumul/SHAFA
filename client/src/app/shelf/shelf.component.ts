@@ -96,7 +96,7 @@ export class ShelfComponent implements OnInit{
   
 
   createShelf() {
-    this.shelfService.createShelf(this.shelfName, this.currentUserId, this.selectedCategoryId).subscribe(
+    this.shelfService.createShelf(this.shelfName, this.currentUserId, this.catId).subscribe(
       (response: any) => {
         this.getAllShelves();
       },

@@ -170,7 +170,6 @@ export class StuffComponent implements OnInit {
   updateStuff() {
     this.stuffService.updateStuff(this.selectedStuff.id, {
       name: this.stuffName,
-      labelId: this.labelId,
       userId: this.currentUserId,
       shelfId: this.shelfId,
       isAvailable: true

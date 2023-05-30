@@ -22,7 +22,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService{
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'https://localhost:443/api/auth';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -42,7 +42,7 @@ export class AuthService{
     return localStorage.getItem('token');
   }
   getUserRole(): Observable<number> {
-    return this.http.get<number>(`http://localhost:3000/api/user/role/:id`);
+    return this.http.get<number>(`https://localhost:443/api/user/role/:id`);
   }
   isAuthenticated(): boolean {
     const token = this.getToken();
@@ -57,7 +57,6 @@ export class AuthService{
       this.router.navigateByUrl('/admin-profile');
       location.reload();
     }
-    // Add more conditions for other roles if needed
   }
 
   getCurrentUserId(){

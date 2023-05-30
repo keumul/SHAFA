@@ -1,15 +1,18 @@
 <div class="json-view">
   <mat-card class="scrollable-card">
+    <div *ngIf="isDataLoaded">
     <div *ngFor="let user of users">
       <button matRipple class="btn-list">
-        <div class="server-response">
             {{ user.userName }}
-            <span *ngIf="hasMinimumStuff(user)" class="symbol">☚︎</span>
+            <!-- <span *ngIf="hasMinimumStuff(user)" class="symbol">☚︎</span> -->
           <mat-card-subtitle>Email: {{ user.email }}</mat-card-subtitle>
           <mat-card-subtitle>Role ID: {{ user.roleId }} (user)</mat-card-subtitle>
           <button (click)="deleteUser(user.id)" class="btn-11">Delete</button>
-        </div>
       </button>
+    </div>
+    </div>
+    <div *ngIf="!isDataLoaded">
+      Loading users...
     </div>
   </mat-card>
 </div>

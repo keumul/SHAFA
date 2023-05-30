@@ -9,6 +9,6 @@ export class RegistrationService {
   constructor(private http: HttpClient) {}
 
   register(userData: any): Observable<any> {
-    return this.http.post<any>(`http://localhost:3000/api/auth/registration`, userData);
+    return this.http.post<any>(`https://localhost:443/api/auth/registration`, userData);
   }
 }

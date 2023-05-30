@@ -4,7 +4,7 @@
       <div class="form-row">
         <button (click)="ngOnInit()" class="custom-btn btn-11">View</button>
         <input matInput type="text" [(ngModel)]="shelfName" placeholder="Name">
-        <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="selectedCategoryId">
+        <mat-select [formControl]="shelvesForm" placeholder="Category" [(ngModel)]="catId">
           <mat-option *ngFor="let category of cat" [value]="category.id">
             {{ category.name }}
           </mat-option>

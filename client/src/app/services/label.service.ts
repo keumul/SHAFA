@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LabelService {
-  private apiUrl = 'http://localhost:3000/api/label';
+  private apiUrl = 'https://localhost:443/api/label';
 
   constructor(private http: HttpClient) {}
 

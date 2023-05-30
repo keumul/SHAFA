@@ -22,11 +22,11 @@ export class ChatComponent implements OnInit {
       this.logout_user = true;
       this.currentUser = {email: 'shafa_user'+unique_nums.toFixed(0)}
     } else {this.logout_user = false;}
-    this.socket = io('http://localhost:3001', {
+    this.socket = io('https://localhost:443', {
       transports: ['websocket'],
 				withCredentials: true,
 				extraHeaders: {
-					'Access-Control-Allow-Origin': 'http://localhost:4200'
+					'Access-Control-Allow-Origin': 'https://localhost:4200'
 				}
     });
 

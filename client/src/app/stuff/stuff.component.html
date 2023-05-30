@@ -21,7 +21,6 @@
         <input matInput type="text" [(ngModel)]="selectedStuff.label!.texture" placeholder="Texture">
         <input matInput type="text" [(ngModel)]="selectedStuff.label!.color" placeholder="Color">
         <input matInput type="text" [(ngModel)]="selectedStuff.label!.size" placeholder="Size">
-        <input matInput type="text" [(ngModel)]="selectedStuff.label!.price" placeholder="Price">
         <input matInput type="text" [(ngModel)]="selectedStuff.label!.brand" placeholder="Brand">
         <button (click)="updateLabel()" class="custom-btn btn-11">Update</button>
         <button (click)="deleteLabel()" class="custom-btn btn-11">Delete</button>
@@ -31,7 +30,6 @@
         <input matInput type="text" [(ngModel)]="newTexture" placeholder="Texture">
         <input matInput type="text" [(ngModel)]="newColor" placeholder="Color">
         <input matInput type="text" [(ngModel)]="newSize" placeholder="Size">
-        <input matInput type="text" [(ngModel)]="newPrice" placeholder="Price">
         <input matInput type="text" [(ngModel)]="newBrand" placeholder="Brand">
         <button (click)="createLabel()" class="custom-btn btn-11">Create</button>
       </div>
@@ -50,10 +48,9 @@
     {{stuff.label?.texture}}
     {{stuff.label?.color}}
     {{stuff.label?.size}}
-    {{stuff.label?.price}}
     {{stuff.label?.brand}}" class="btn-list" (click)="setStuffId(stuff)">
             <div *ngIf="stuff.img">
-              <img [src]="'http://localhost:3000/' + stuff.img">
+              <img [src]="'https://localhost:443/' + stuff.img">
             </div>
           </button>
         </div>

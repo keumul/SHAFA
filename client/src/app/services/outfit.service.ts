@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OutfitService {
-    private baseUrl = 'http://localhost:3000/api';
+    private baseUrl = 'https://localhost:443/api';
 
     constructor(private http: HttpClient) {}
       getAllOutfits(id: number): Observable<any> {

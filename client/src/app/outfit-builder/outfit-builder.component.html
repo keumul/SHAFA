@@ -30,7 +30,7 @@
             <mat-card-title>{{ outfit.name }}</mat-card-title>
             <mat-card-subtitle>
               <div *ngFor="let stuff of getOutfitStuff(outfit)">
-                <img matTooltip="{{ stuff.name }}" [src]="'http://localhost:3000/' + stuff.img" alt="Stuff Image">
+                <img matTooltip="{{ stuff.name }}" [src]="'https://localhost:443/' + stuff.img" alt="Stuff Image">
               </div>
             </mat-card-subtitle>
           </div>
