@@ -65,8 +65,8 @@
           "options": {
             "browserTarget": "app:build",
             "ssl": true,
-            "sslKey": "server.key",
-            "sslCert": "server.crt"
+            "sslKey": "../private.key",
+            "sslCert": "../certificate.crt"
         },
           "configurations": {
             "production": {

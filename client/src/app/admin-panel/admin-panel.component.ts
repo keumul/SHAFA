@@ -5,7 +5,9 @@ import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { ShafaService } from '../services/shafa.service';
 import { ToastrService } from 'ngx-toastr';
-import { Chart, registerables } from 'chart.js';
+import { Chart, LogarithmicScale, registerables } from 'chart.js';
+import { catchError, forkJoin, tap, throwError } from 'rxjs';
+
 
 interface Stuff {
   id: number;
@@ -71,7 +73,6 @@ export class AdminPanelComponent {
   }
   ngOnInit(){
     this.getUsers();
-    Chart.register(...registerables);
     this.getAllStuffs();
     const unique_nums = Math.random() * 200000
     this.currentUser = this.authService.getCurrentUserId()
@@ -79,9 +80,9 @@ export class AdminPanelComponent {
       this.logout_user = true;      
       this.currentUser = {email: 'shafa_user_'+unique_nums.toFixed(0)}
     } else {this.logout_user = false;}
-    this.socket = io('https://localhost:443', {
+    this.socket = io('http://localhost:443', {
       transports: ['websocket'],
-				withCredentials: true,
+				withCredentials: true, 
 				extraHeaders: {
 					'Access-Control-Allow-Origin': 'https://localhost:4200'
 				}
@@ -102,11 +103,24 @@ export class AdminPanelComponent {
     });
   }
 
+  getAllStuffs(): void {
+    this.shafaService.getAllStuffs()
+      .subscribe(
+        (response) => {
+          this.stuffs = response.stuffs;
+        },
+        (error) => {
+          console.error(error);
+          // Handle error
+        }
+      );
+  }
+  
   getUsers(): void {
-    this.userService.getUsers()
+    this.userService.getAllUsers()
       .subscribe(
         response => {
-          this.users = Object.values(response.user);
+          this.users = response.user;
         },
         error => {
           console.error(error);
@@ -115,60 +129,53 @@ export class AdminPanelComponent {
       );
   }
 
-  getAllStuffs(): void {
-    this.shafaService.getAllStuffs()
-      .subscribe(
-        (response) => {
-          this.stuffs = response.stuffs;
-          this.generateUserStatsChart();
-        },
-        (error) => {
-          this.toastr.error('An error occurred while retrieving stuffs.', 'Error');
-        }
-      );
-  }
-
   sendMessage(email:string, message: string) {
     this.socket.emit('message', {email: email, message: message});
   }
-  generateUserStatsChart(): void {
-    const userData = this.stuffs.reduce((data: any, stuff: Stuff) => {
-      const userId = stuff.user.id;
-      data[userId] = data[userId] ? data[userId] + 1 : 1;
-      return data;
-    }, {});
 
-    const userNames = this.users!.map((user) => user.userName);
-    const userStats = this.users!.map((user) => userData[user.id] || 0);
+  // showGraph(){
+  //   this.generateUserStatsChart()
+  // }
 
-    const canvas = document.getElementById('userStatsChart') as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  // generateUserStatsChart(): void {
+  //   let userData: any;
+  //   this.stuffs.reduce((userData: any, stuff: Stuff) => {
+  //     const userId = stuff.user.id;
+  //     userData[userId] = userData[userId] ? userData[userId] + 1 : 1;
+  //   }, {});
+  //   console.log(userData);
+    
+  //   const userNames = this.users!.map((user) => user.userName);
+  //   const userStats = this.users!.map((user) => userData[user.id] || 0);
 
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: userNames,
-        datasets: [
-          {
-            label: 'Number of Clothes',
-            data: userStats,
-            backgroundColor: 'rgb(255, 255, 255)',
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-            }}
-        }
-      }
-    });
-  }
+  //   const canvas = document.getElementById('userStatsChart') as HTMLCanvasElement;
+  //   const ctx = canvas.getContext('2d');
+  //   if (!ctx) return;
+
+  //   new Chart(ctx, {
+  //     type: 'bar',
+  //     data: {
+  //       labels: userNames,
+  //       datasets: [
+  //         {
+  //           label: 'Number of Clothes',
+  //           data: userStats,
+  //           backgroundColor: 'rgb(255, 255, 255)',
+  //           borderWidth: 1
+  //         }
+  //       ]
+  //     },
+  //     options: {
+  //       responsive: true,
+  //       scales: {
+  //         y: {
+  //           beginAtZero: true,
+  //           ticks: {
+  //             stepSize: 1,
+  //           }}
+  //       }
+  //     }
+  //   });
+  // }
   currentUser: any;
 }

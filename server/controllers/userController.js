@@ -1,5 +1,6 @@
-const { Users } = require('../models/models')
+const { Users, Stuffs } = require('../models/models')
 const jwt = require('jsonwebtoken')
+
 require('dotenv').config()
 
 class userController {
@@ -16,7 +17,10 @@ class userController {
   }
     async getUsers(req, res) {
         try {
-          const user = await Users.findAll({ where: { roleId: "2" } });
+          const user = await Users.findAll({ where: { roleId: "2" }, include: 
+            {model: Stuffs}
+            
+          });
           res.json({ user });
         } catch (error) {
           console.error(error);

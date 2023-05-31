@@ -1,18 +1,21 @@
 <div class="json-view">
   <mat-card class="scrollable-card">
-    <div *ngIf="isDataLoaded">
-    <div *ngFor="let user of users">
-      <button matRipple class="btn-list">
-            {{ user.userName }}
-            <!-- <span *ngIf="hasMinimumStuff(user)" class="symbol">☚︎</span> -->
-          <mat-card-subtitle>Email: {{ user.email }}</mat-card-subtitle>
-          <mat-card-subtitle>Role ID: {{ user.roleId }} (user)</mat-card-subtitle>
-          <button (click)="deleteUser(user.id)" class="btn-11">Delete</button>
-      </button>
-    </div>
-    </div>
-    <div *ngIf="!isDataLoaded">
-      Loading users...
-    </div>
+    <ng-container *ngIf="users.length > 0; else noUsers">
+      <ng-container *ngTemplateOutlet="userList; context: { minCount: minStuffCount }"></ng-container>
+    </ng-container>
+    <ng-template #noUsers>
+      <p>No users found.</p>
+    </ng-template>
   </mat-card>
 </div>
+
+<ng-template #userList let-minCount="minCount">
+  <button matRipple class="btn-list" *ngFor="let user of users">
+    {{ user.userName }}
+    <span *ngIf="hasMinimumStuff(user, minCount)" class="symbol">☚︎</span>
+    <mat-card-subtitle>Email: {{ user.email }}</mat-card-subtitle>
+    <mat-card-subtitle>Role ID: {{ user.roleId }} (user)</mat-card-subtitle>
+    <mat-card-subtitle>Stuff count: {{ user.stuffs.length }}</mat-card-subtitle>
+    <button (click)="deleteUser(user.id)" class="btn-11">Delete</button>
+  </button>
+</ng-template>

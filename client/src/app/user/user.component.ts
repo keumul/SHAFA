@@ -24,6 +24,7 @@ interface User {
   userName: string;
   email: string;
   roleId: number;
+  stuffs: Stuff[];
 }
 
 @Component({
@@ -35,21 +36,25 @@ export class UserComponent implements OnInit {
   users: User[] = [];
   selectedUserId: number = 0;
   stuffs: Stuff[] = [];
-  isDataLoaded: boolean = false
-
+  minStuffCount: number = 0;
   constructor(private userService: UserService, 
     private shafaService: ShafaService) { }
     ngOnInit(): void {
       this.getUsers();
-    this.getAllStuffs();
+      this.getAllStuffs();
     }
+
+    hasMinimumStuff(user: User, minCount: number): boolean {
+      return user.stuffs.length === minCount;
+    }
+    
   
     getAllStuffs(): void {
       this.shafaService.getAllStuffs()
         .subscribe(
           (response) => {
             this.stuffs = response.stuffs;
-            this.isDataLoaded = true;
+            this.minStuffCount = this.calculateMinStuffCount();
           },
           (error) => {
             console.error(error);
@@ -59,12 +64,11 @@ export class UserComponent implements OnInit {
     }
     
     getUsers(): void {
-      this.userService.getUsers()
+      this.userService.getAllUsers()
         .subscribe(
           response => {
-            this.users = Object.values(response.user);
-            console.log(this.users);
-            this.isDataLoaded = true;
+            this.users = response.user;
+            this.minStuffCount = this.calculateMinStuffCount();
           },
           error => {
             console.error(error);
@@ -72,77 +76,14 @@ export class UserComponent implements OnInit {
           }
         );
     }
-    // ngOnInit(): void {
-    //   this.initializeData();
-    // }
-    
-    // async initializeData() {
-    //   await this.getUsers();
-    //   console.log(this.users);
-    //   this.getAllStuffs();
-    // }
-    
-    // async getUsers(): Promise<void> {
-    //   try {
-    //     const response = await this.userService.getUsers().toPromise();
-    //     this.users = Object.values(response.user);
-    //     console.log(this.users);
-    //     this.isDataLoaded = true;
-    //   } catch (error) {
-    //     console.error(error);
-    //     // Handle error
-    //   }
-    // }
-    
-    // async getAllStuffs(): Promise<void> {
-    //   try {
-    //     const response = await this.shafaService.getAllStuffs().toPromise();
-    //     this.stuffs = response.stuffs;
-    //     this.isDataLoaded = true;
-    //   } catch (error) {
-    //     console.error(error);
-    //     // Handle error
-    //   }
-    // }
-
-
-    // getUsers(): Promise<void> {
-    //   return new Promise<void>((resolve, reject) => {
-    //     this.userService.getUsers()
-    //       .subscribe(
-    //         response => {
-    //           this.users = Object.values(response.user);
-    //           this.isDataLoaded = true; // Установка флага isDataLoaded в true
-    //           resolve();
-    //         },
-    //         error => {
-    //           console.error(error);
-    //           reject(error);
-    //         }
-    //       );
-    //   });
-    // }
-    
-    // getAllStuffs(): void {
-    //   this.shafaService.getAllStuffs()
-    //     .subscribe(
-    //       (response) => {
-    //         this.stuffs = response.stuffs;
-    //         this.isDataLoaded = true; // Установка флага isDataLoaded в true
-    //       },
-    //       (error) => {
-    //         console.error(error);
-    //         // Handle error
-    //       }
-    //     );
-    // }
-    
- 
+    calculateMinStuffCount(): number {
+      return Math.min(...this.users.map(user => user.stuffs.length)); // Calculate minimum stuff count among users
+    }
   deleteUser(id: number): void {
     this.userService.deleteUser(id)
       .subscribe(
         response => {
-          this.getUsers(); 
+        this.getUsers();
         this.ngOnInit();
         },
         error => {

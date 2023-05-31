@@ -50,7 +50,7 @@
     {{stuff.label?.size}}
     {{stuff.label?.brand}}" class="btn-list" (click)="setStuffId(stuff)">
             <div *ngIf="stuff.img">
-              <img [src]="'https://localhost:443/' + stuff.img">
+              <img [src]="'http://localhost:443/' + stuff.img">
             </div>
           </button>
         </div>

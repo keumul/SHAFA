@@ -29,7 +29,7 @@ async getAllStuffs(req, res) {
           include: [
             { model: Users },
             { model: Shelves },
-            { model: Labels }
+            { model: Labels },
           ],
           where : {
             userId: user_id
